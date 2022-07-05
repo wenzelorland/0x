@@ -1,6 +1,8 @@
 mod variables;
 mod control;
 mod loops;
+mod ownership;
+mod slice;
 
 fn main() {
     println!("Hello, world!");
@@ -13,8 +15,10 @@ fn main() {
 
     // Loops
     loops::run();
-    //
+
+    // Rust Ownership
+    ownership::run();
 
     //
-
+    slice::run();
 }

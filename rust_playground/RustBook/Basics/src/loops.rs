@@ -15,7 +15,7 @@ pub fn run(){
 
     // While Loop
     let mut i:i32 = 0;    
-    while i < 100_000{
+    while i < 100{
         println!{"{}", i};
 
         i += 1;
