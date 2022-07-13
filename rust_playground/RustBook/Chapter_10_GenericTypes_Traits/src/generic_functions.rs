@@ -41,7 +41,7 @@ fn largest_number(number_list: Vec<i32>) -> i32 {
 // Same function as above, but now with generic types
 // Generic types are defined in the <> brakcets <T> stands for <Type> 
 fn get_largest_gen<T: PartialOrd + Copy>(number_list: Vec<T>) -> T {
-    let mut largest = number_list[0];
+    let mut largest: T = number_list[0];
     for number in number_list {
         if number > largest {
             largest = number;
