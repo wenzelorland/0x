@@ -45,8 +45,8 @@ which are defined during code runtime
 */
 
 pub fn run(){
-    let p1 = Point {x:5, y:10.4};
-    let p2 = Point {x:"Hello", y:'c'};
+    let p1: Point<i32, f64> = Point {x:5, y:10.4};
+    let p2: Point<&str, char> = Point {x:"Hello", y:'c'};
 
     // The Option and Result Enums are implemented using generics
     enum Option <T> {
@@ -59,7 +59,7 @@ pub fn run(){
         Err(E),
     }
 
-    let p3 = p1.mixup(p2);
+    let p3: Point<i32, char> = p1.mixup(p2);
     println!("p3.x = {}, p3.y = {}", p3.x, p3.y);
 
 }
