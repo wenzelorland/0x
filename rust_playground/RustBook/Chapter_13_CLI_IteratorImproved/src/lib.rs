@@ -34,18 +34,30 @@ pub struct Config {
 impl Config {
 
     // constructor function
-    pub fn new(args: &[String]) -> Result<Config, &str> {
-        if args.len() < 3 {
-            return Err("Not enough arguments");
-        }
+    // instead of taking the mutable String slide, we pass in the env::Args iterator 
+    // we need to annotate the lifetime here, since Args is an own type and we return a string slice
+    pub fn new(mut args: env::Args) -> Result<Config, &'static str> {
+        // discarding the first element in the args iterator (it's only the path to the program)
+        args.next();
 
-        // cloning the strings
-        let query: String = args[1].clone(); // in order to avoid passing the ownership
-        let filename: String = args[2].clone();
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a query string"),
+        };
+
+        let filename = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a file name"),
+        };
+        // -> with this implementation we do not have to clone elements as the ownership of the 
+        // itereator elements is automatically passed on
+
 
         // checks for the key "CASE_INSENSITIVE" in the set of environment variables and retrieves the corresponding value
         let case_sensitive = env::var("CASE_INSENSITIVE").is_err(); // if the key exists, the result will be OK containing the result, if key is not found then error is returned and value is set to false
         println!("{:?}", case_sensitive);
+
+        // at this point Config takes ownership of the strings
         Ok(Config{query, filename, case_sensitive})
     }
 }
@@ -53,6 +65,17 @@ impl Config {
 // &str -> string slice
 // We need to tie the lifetime of the result to one of the input variables´ lifetimes, since we are returning a reference here
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+    
+    /* NEW */
+    contents
+        .lines()
+        .filter(|line| line.contains(query)) // filter only line that containt query string
+        .collect() // Rust know which collection we want as it is specified in the return type
+
+    // Since Rust applies lazy evaluation, the speed difference in using higher level concepts
+    // such as Iterators vs loops is not meaningful, as they both compile donw to the same low level concepts
+
+    /* OLD 
     let mut results = Vec::new();
     
     for line in contents.lines() {
@@ -60,7 +83,7 @@ pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
             results.push(line);
         }
     }
-    results    
+    */
 }
 pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     let query = query.to_lowercase();
