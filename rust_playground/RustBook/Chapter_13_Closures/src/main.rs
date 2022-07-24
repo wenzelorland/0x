@@ -6,6 +6,7 @@ use std::thread;
 use std::time::Duration;
 
 mod struct_and_closures;
+mod rust_iterators;
 
 fn simulated_expensive_calculation(intensity:u32) ->u32 {
     println!("calculating slowly...");
@@ -86,4 +87,7 @@ fn main() {
 
     let y = 4;
     assert!(equal_to_x(y));
+
+    rust_iterators::run();
+
 }
