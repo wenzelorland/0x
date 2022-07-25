@@ -1,3 +1,10 @@
+// -- Cargo Commands -- //
+-> cargo init
+-> cargo build
+-> cargo check
+-> cargo run
+-> cargo new
+
 // -- Crates Publishing -- //
 
 // Release Profiles
