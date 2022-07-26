@@ -28,6 +28,9 @@ Box is such smart pointer.
 
 mod deref_trait;
 mod drop_trait;
+mod interior_mutability;
+mod rc_and_refcell;
+
 enum List {
     Cons(i32, Box<List>), // this is a specific data structure -> cons list where the first element of the variant is the value and the second value is the pointer to a preceding list of again the same pattern
     Nil, // denotes the end of the list; cons-lists are not frequently used in Rust and one is better of with Vectors
@@ -44,7 +47,18 @@ enum Message {
     ChangeColor(i32, i32, i32),
 }
 
+use std::rc;
+
 use List::{Cons, Nil};
+
+/// Smart Pointers ///
+/// Rc<T> enables mutiple owners of the same data; Box<T> and RefCell<T> have single owners.
+/// Box<T> allows immutable or mutable borrows checked at compile time;
+/// Rc<T> allows only immutable borrows checked at compile time;
+/// RefCell<T> allows immutable or mutable borrows checked at runtim.
+/// Because RefCell<T> allows mutable borrows checked at runtime, you can mutate the value inside the RefCell<T> even when the 
+/// RefCell<T> is immutable
+
 
 fn main() {
     // Boxes do not have any meaningful overhead
@@ -62,5 +76,7 @@ fn main() {
 
     deref_trait::run();
     drop_trait::run();
+    interior_mutability::run();
+    rc_and_refcell::run();
 }
 // here b will be deallocated from the Stack and the value stored on the Heap will also be deallocated
