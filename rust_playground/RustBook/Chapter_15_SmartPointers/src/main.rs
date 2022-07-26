@@ -12,6 +12,8 @@ extra capabilities.
 
 Smart Pointers are implemented using structs but with the Deref and Drop Traits.
 The Deref Trait allows instances of the Smart Pointer struct to be treated as references, so you can write code that works with eiether references and smart pointers.
+-> Allows Smart Pointers to be treated as simple references
+-> The deref operator is *variable; i.e. *x for dereferencing x
 The Drop Trait allows to customise the code that is run when an instance of the Smart Pointer goes out of scope.
 
 
@@ -23,6 +25,9 @@ Box is such smart pointer.
 // we do not know ex-ante how much space this Enum will take up
 // Rust will not be able to determine how large the first variant will be, as the List can be of infinite length
 // fixign this with Box<List> will fix this, as the Box will be a pointer to the list, instead of duplicating the lists
+
+mod deref_trait;
+mod drop_trait;
 enum List {
     Cons(i32, Box<List>), // this is a specific data structure -> cons list where the first element of the variant is the value and the second value is the pointer to a preceding list of again the same pattern
     Nil, // denotes the end of the list; cons-lists are not frequently used in Rust and one is better of with Vectors
@@ -54,5 +59,8 @@ fn main() {
     println!("b = {}", b); // we use the Box value as if it would be a value on the Stack
 
     let list = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
+
+    deref_trait::run();
+    drop_trait::run();
 }
 // here b will be deallocated from the Stack and the value stored on the Heap will also be deallocated
