@@ -30,6 +30,7 @@ mod deref_trait;
 mod drop_trait;
 mod interior_mutability;
 mod rc_and_refcell;
+mod reference_cycles;
 
 enum List {
     Cons(i32, Box<List>), // this is a specific data structure -> cons list where the first element of the variant is the value and the second value is the pointer to a preceding list of again the same pattern
@@ -60,6 +61,10 @@ use List::{Cons, Nil};
 /// RefCell<T> is immutable
 
 
+// Using the Rc (reference counting) and RefCell smart pointer we can create situation where memory leaks occur
+// where items reference each other and create a memory leak
+// Memory leaks are rare but can happen in Rust, as Rust's memory safety guarantuees that there are no race conditions, however, memory leaks can still happen
+
 fn main() {
     // Boxes do not have any meaningful overhead
     // One would typically use them when size of type cannot known at compile time 
@@ -78,5 +83,6 @@ fn main() {
     drop_trait::run();
     interior_mutability::run();
     rc_and_refcell::run();
+    reference_cycles::run();
 }
 // here b will be deallocated from the Stack and the value stored on the Heap will also be deallocated
