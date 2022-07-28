@@ -28,6 +28,9 @@ use std::{thread, time::Duration};
 // When the main thread ends, any execution of a spawned thread will be stopped
 // In order to avoid this, we need to work with Join in order to wait for all spawned threads until they are finished to continue / leave the execution
 
+mod message_passing;
+mod state_sharing;
+
 fn main() {
     println!("Hello to Rust Concurrency!");
     // running a closure in the thread without an input variable to the closure
@@ -74,4 +77,7 @@ fn main() {
     });
 
     handle.join().unwrap();
+
+    message_passing::run();
+    state_sharing::run();
 }
