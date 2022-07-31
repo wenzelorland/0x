@@ -4,6 +4,11 @@
 // In Rust structs hold data and with the implementation block we can provide methods on structs an enums
 // objects and enums thus provide the same functionality as objects
 
+// -> In short: Rust and OOP
+// [x] Encapsulation
+// [x] Polymorphism
+// [ ] (classical) Inheritance
+
 // Encapsulation
 // Implementation details are hidden from the code using that object
 // Code outside the object is only limited to operate with the object through its public API
@@ -11,6 +16,13 @@
 
 // In Rust everything is private by default.
 // Fields can be private or publlic, thus encapsulation is also featured in Rust
+
+
+// Encoding States and Behaviours as Types
+// -> please check Chapter 17 for this, as this explains how OOP can be made more "rust-like" 
+// -> you can encode state into the type system to emulate OOP characteristics
+
+
 pub struct AveragedCollection {
     list: Vec<i32>,
     average: f64,
@@ -68,6 +80,48 @@ impl AveragedCollection {
 // In addition to Generics, Rust also provides Trait Objects, which are similar but they use dynamic dispatch (while Generics use static dispatch)
 
 
+mod dispatching;
+mod state_pattern;
+use Chapter_17_OOP::{Draw, Screen, Button};
+mod modules;
+use modules::blog;
+
+struct SelectBox {
+    width: u32,
+    height: u32,
+    options: Vec<String>,
+}
+
+impl Draw for SelectBox {
+    fn draw(&self) {
+        // draw select box
+    }
+}
+
 fn main() {
     println!("Hello to Rust's Object Orientation Programming Features.");
+    dispatching::run();
+    let screen = Screen {
+        
+        // because we are using trait obects
+        // -> at compile time Rust will make sure that every item in the vector
+        // -> implements the Draw trait
+        components: vec![
+            Box::new(SelectBox {
+                width:100,
+                height: 100,
+                options: vec![
+                    String::from("yes"),
+                    String::from("now"),
+                    String::from("maybe")
+                ]
+            }),
+            Box::new(Button {
+                width:100,
+                height: 100,
+                label: String::from("ok")
+            })
+        ],
+    };
+    state_pattern::run();
 }
