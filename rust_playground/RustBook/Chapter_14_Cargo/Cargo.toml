@@ -1,0 +1,25 @@
+[package]
+name = "Chapter_14_Cargo"
+version = "0.1.0"
+authors = ["0x"]
+edition = "2021"
+description = "A library for modeling artistic concepts"
+license = "MIT"
+
+[workspace]
+
+members = [
+    "adder",
+    "addone"
+]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rand = "0.8.3"
+
+[profile.dev] 
+opt-level = 0
+
+[profile.release]
+opt-level = 3
