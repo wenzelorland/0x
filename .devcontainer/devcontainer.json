@@ -14,7 +14,8 @@
 				"ms-python.python",
 				"ms-python.vscode-pylance",
 				"ms-toolsai.jupyter",
-				"donjayamanne.git-extension-pack"
+				"donjayamanne.git-extension-pack",
+				"NomicFoundation.hardhat-solidity"
 			]
 		}
 	}
