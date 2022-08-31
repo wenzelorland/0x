@@ -1,0 +1,29 @@
+mkdir node1 node2
+
+geth --datadir node1 account new --password node1/password.txt
+geth --datadir node2 account new --password node2/password.txt
+
+--> Public keys rauskopieren
+
+geth init --datadir node1 genesis.json
+geth init --datadir node2 genesis.json
+
+bootnode -genkey boot.key 
+bootnode -nodekey boot.key -addr :30305
+
+
+geth --datadir node1 --port 30306 --bootnodes enode://ae775c3e33493db08c81159c850c2a82395d3a1c01bb2d152afbe8f2db425ff6de96b075f95dbfa53f147733e4c4eb4208e8d4769863e1f5930627bebe23c197@127.0.0.1:0?discport=30305  --networkid 12345 --unlock 0x9996Ce4A46BDb531047E36fffF42FBD8FC3BFA36 --password node1/password.txt --authrpc.port 8553
+geth --datadir node2 --port 30307 --bootnodes enode://ae775c3e33493db08c81159c850c2a82395d3a1c01bb2d152afbe8f2db425ff6de96b075f95dbfa53f147733e4c4eb4208e8d4769863e1f5930627bebe23c197@127.0.0.1:0?discport=30305  --networkid 12345 --unlock 0x1a3f1846A4B86692bE9801dDFB52E5fb9C461550 --password node2/password.txt --authrpc.port 8554
+
+
+
+geth --rpc --rpcport "8085" --datadir private init private/genesis.json
+
+
+
+geth --datadir private account new --password private/password.txt
+
+1. Acc: 0x4bb523f60052317952b516F5EBaF11cE1c220A4B
+2. Acc: 0x3eD543F240a346182564D0812273e637361ad018
+
+geth --datadir private init private/genesis.json
