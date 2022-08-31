@@ -3,3 +3,4 @@ node1/geth/
 node1/keystore/
 node2/geth/
 node2/keystore/
+.DS_Store

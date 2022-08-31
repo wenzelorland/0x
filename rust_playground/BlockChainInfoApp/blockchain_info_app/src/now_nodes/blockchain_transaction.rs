@@ -17,7 +17,7 @@ pub struct Vin {
 #[serde(rename_all = "camelCase")]
 pub struct Vout {
     pub value: String,
-    n: u64, 
+    n: u64,
     hex: String,
     pub addresses: Vec<String>,
     is_address: bool,
@@ -29,7 +29,7 @@ pub struct BlockchainTransaction {
     pub txid: String,
     version: u64,
     //lock_time: u64,
-    // since the pattern is repetitive, we can use structs and 
+    // since the pattern is repetitive, we can use structs and
     // assign them to the struct fields to reflect the message pattern
     pub vin: Vec<Vin>,
     // the objects in vout list are of the type Vout (wich the struct Vout reflects)
