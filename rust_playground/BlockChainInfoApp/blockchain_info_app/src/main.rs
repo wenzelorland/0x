@@ -4,6 +4,7 @@ use core::time;
 use std::{io, thread};
 
 use dialoguer::{theme::ColorfulTheme, Select};
+use ethereum::eth_info::latest_block;
 #[macro_use]
 extern crate serde_derive;
 extern crate chrono;
@@ -16,22 +17,26 @@ mod now_nodes {
     pub mod blockchain_transaction;
 }
 
-mod geth {
-    pub mod geth_info;
+mod ethereum {
+    pub mod eth_info;
 }
 // using the contents of the modules in main
-use crate::now_nodes::blockchain_address::BlockchainAddress;
+use crate::now_nodes::{
+    blockchain_address::BlockchainAddress,
+    blockchain_info::{
+        blockchain_address_request, blockchain_status_request, calculate_wallet_balance,
+    },
+    blockchain_status::BlockchainStatus,
+};
 
 fn bc_now_nodes_app(address: &str) {
-    let status: now_nodes::blockchain_status::BlockchainStatus =
-        now_nodes::blockchain_info::blockchain_status_request();
+    let status: BlockchainStatus = blockchain_status_request();
     println!(
         "\n\nQuerying {} - chain: {}\n\n",
         &status.blockbook.coin, // accessing the attributes of the struct
         &status.backend.chain
     );
-    let bc_address: BlockchainAddress =
-        now_nodes::blockchain_info::blockchain_address_request(address);
+    let bc_address: BlockchainAddress = blockchain_address_request(address);
 
     println!(
         "\n\nAnalyzing transactions from Bitcoin adress {}\n\n",
@@ -54,8 +59,7 @@ fn bc_now_nodes_app(address: &str) {
         println!("\nWe will look up the following transactions:\n");
         thread::sleep(sleep_time);
         println!("{:#?}", &bc_address.txids); // {:#?} creates a prettier output presentation of the vector
-        let balance: i32 =
-            now_nodes::blockchain_info::calculate_wallet_balance(&bc_address, address);
+        let balance: i32 = calculate_wallet_balance(&bc_address, address);
         /*
         let mut balance: i32 = 0;
         for tx_id in &bc_address.txids {
@@ -103,19 +107,28 @@ fn bc_now_nodes_app(address: &str) {
 }
 
 fn main() {
-    let selections = &["NOWNodes - BTC", "Go Ethereum - Localhost"];
+    let selections = &[
+        "BTC (NOWNodes)",
+        "Ethereum (Localhost)",
+        "Ethereum (Infura)",
+    ];
     let selection = Select::with_theme(&ColorfulTheme::default())
         .with_prompt("Which data source would you like to query?")
         .default(0)
         .items(&selections[..])
         .interact()
         .unwrap();
-    if selection == 0 {
-        let entered_address = dotenv::var("BC_WALLET").expect("Error reading env var.");
-        bc_now_nodes_app(&entered_address);
-    } else if selection == 1 {
-        geth::geth_info::latest_block();
-    } else {
-        println!("No idea what you entered..")
+
+    match selection {
+        0 => bc_now_nodes_app(&dotenv::var("BC_WALLET").expect("Error reading env var.")),
+        1 => latest_block("ws://127.0.0.1:8546"),
+        2 => latest_block(
+            &[
+                "wss://mainnet.infura.io/ws/v3/",
+                &dotenv::var("INFURA_API_KEY").expect("Could not find key: INFURA_API_KEY"),
+            ]
+            .join(""),
+        ),
+        _ => println!("No idea what you entered.."),
     }
 }
