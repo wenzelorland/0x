@@ -19,6 +19,7 @@ mod now_nodes {
 
 mod ethereum {
     pub mod eth_info;
+    pub mod utils;
 }
 // using the contents of the modules in main
 use crate::now_nodes::{
