@@ -25,19 +25,27 @@ mod ethereum {
 use crate::now_nodes::{
     blockchain_address::BlockchainAddress,
     blockchain_info::{
-        blockchain_address_request, blockchain_status_request, calculate_wallet_balance,
+        blockchain_address_request, blockchain_status_request, calculate_wallet_balance, Chain,
     },
     blockchain_status::BlockchainStatus,
 };
 
-fn bc_now_nodes_app(address: &str) {
-    let status: BlockchainStatus = blockchain_status_request();
+fn now_nodes_app(chain_str:&str, address: &str) {
+    
+    let blockchain = match chain_str {
+        "ethereum" => Chain::Ethereum,
+        "bitcoin" => Chain::Bitcoin,
+        _ => Chain::Bitcoin
+    };
+    
+    let status: BlockchainStatus = blockchain_status_request(&blockchain);
     println!(
         "\n\nQuerying {} - chain: {}\n\n",
         &status.blockbook.coin, // accessing the attributes of the struct
         &status.backend.chain
     );
-    let bc_address: BlockchainAddress = blockchain_address_request(address);
+
+    let bc_address: BlockchainAddress = blockchain_address_request(&blockchain, address);
 
     println!(
         "\n\nAnalyzing transactions from Bitcoin adress {}\n\n",
@@ -60,45 +68,7 @@ fn bc_now_nodes_app(address: &str) {
         println!("\nWe will look up the following transactions:\n");
         thread::sleep(sleep_time);
         println!("{:#?}", &bc_address.txids); // {:#?} creates a prettier output presentation of the vector
-        let balance: i32 = calculate_wallet_balance(&bc_address, address);
-        /*
-        let mut balance: i32 = 0;
-        for tx_id in &bc_address.txids {
-            // vout are actually transactions that went in
-            // vin are transactions that went out
-            let mut subtotal_vin: i32 = 0;
-            let mut subtotal_vout: i32 = 0;
-
-            // reading the transaction details
-            let bc_transaction: BlockchainTransaction =  blockchain_info::blockchain_transaction_request(&tx_id);
-
-            let match_address = String::from(address);
-
-            // tx is represented by each item in the vin vector
-            for tx in &bc_transaction.vin {
-                // each tx will be a Vin struct
-                // since addresses is a vector, we can call the .contains method on it
-                if tx.addresses.contains(&match_address) {
-                    // since the value attribute is stored as string, we need to parse it to an integer first
-                    // only append the value where the address matches
-                    subtotal_vin += tx.value.parse::<i32>().unwrap();
-                }
-            }
-
-            for tx in &bc_transaction.vout {
-                if tx.addresses.contains(&match_address) {
-                    subtotal_vout += tx.value.parse::<i32>().unwrap();
-                }
-            }
-            balance += &subtotal_vout - &subtotal_vin;
-
-            println!("-------------------------------------------------------");
-            println!("TX ID:                     {}", &bc_transaction.txid);
-            println!("Satoshis IN:               {}", &subtotal_vout);
-            println!("Satoshis OUT:              {}", &subtotal_vin);
-            println!("BALANCE:                   {}", &balance);
-            println!("-------------------------------------------------------");
-        }*/
+        let balance: i32 = calculate_wallet_balance(&blockchain,&bc_address, address);
         println!("Current BALANCE:           {}", &balance);
         println!(
             "         IN BTC:           {}\n\n",
@@ -110,9 +80,11 @@ fn bc_now_nodes_app(address: &str) {
 fn main() {
     let selections = &[
         "BTC (NOWNodes)",
+        "Ethereum (NOWNodes)",
         "Ethereum (Localhost)",
         "Ethereum (Infura)",
     ];
+
     let selection = Select::with_theme(&ColorfulTheme::default())
         .with_prompt("Which data source would you like to query?")
         .default(0)
@@ -121,9 +93,10 @@ fn main() {
         .unwrap();
 
     match selection {
-        0 => bc_now_nodes_app(&dotenv::var("BC_WALLET").expect("Error reading env var.")),
-        1 => latest_block("ws://127.0.0.1:8546"),
-        2 => latest_block(
+        0 => now_nodes_app("bitcoin",&dotenv::var("BC_WALLET").expect("Error reading env var.")),
+        1 => now_nodes_app("ethereum",&dotenv::var("ETH_WALLET").expect("Error reading env var.")),
+        2 => latest_block("ws://127.0.0.1:8546"),
+        3 => latest_block(
             &[
                 "wss://mainnet.infura.io/ws/v3/",
                 &dotenv::var("INFURA_API_KEY").expect("Could not find key: INFURA_API_KEY"),

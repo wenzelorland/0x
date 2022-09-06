@@ -12,7 +12,23 @@ use crate::now_nodes::blockchain_address::BlockchainAddress;
 use crate::now_nodes::blockchain_status::BlockchainStatus;
 use crate::now_nodes::blockchain_transaction::BlockchainTransaction;
 
-const HOST_ROOT: &str = "https://btcbook.nownodes.io/api/";
+const BTC_HOST_ROOT: &str = "https://btcbook.nownodes.io/api/";
+const ETH_HOST_ROOT: &str = "https://eth-blockbook.nownodes.io/api/";
+
+pub enum Chain {
+    Bitcoin,
+    Ethereum
+}
+
+impl Chain {
+    fn get_host(&self) -> &str {
+        match *self {
+            Chain::Ethereum => &ETH_HOST_ROOT,
+            Chain::Bitcoin => &BTC_HOST_ROOT
+        }
+    }
+}
+
 
 #[tokio::main]
 pub async fn send_request(url: &str) -> String {
@@ -31,22 +47,23 @@ pub async fn send_request(url: &str) -> String {
         .expect("Failed to convert payload")
 }
 
-pub fn blockchain_status_request() -> BlockchainStatus {
-    let response = send_request(&HOST_ROOT);
+pub fn blockchain_status_request(chain:&Chain) -> BlockchainStatus {
+    let response = send_request(chain.get_host());
     // specifying the return
     serde_json::from_str(&response).expect("Failed to parse JSON") // option return type handling
 }
 
-pub fn blockchain_address_request(address: &str) -> BlockchainAddress {
-    let response = send_request(&[HOST_ROOT, "v2/address/", &address].join("")); // joining mutliple strings through array creationa and join method on the array
-                                                                                 // specifying the return
+pub fn blockchain_address_request(chain:&Chain, address: &str) -> BlockchainAddress {
+    let response = send_request(&[chain.get_host(), "v2/address/", &address].join("")); // joining mutliple strings through array creationa and join method on the array
+    // specifying the return
     serde_json::from_str(&response).expect("Failed to parse JSON") // option return type handling
 }
 
-pub fn blockchain_transaction_request(transaction: &str) -> BlockchainTransaction {
+pub fn blockchain_transaction_request(chain:&Chain, transaction: &str) -> BlockchainTransaction {
     // retrieve transaction details by hash
-    let response = send_request(&[HOST_ROOT, "v2/tx/", &transaction].join("")); // joining mutliple strings through array creationa and join method on the array
-                                                                                // specifying the return
+    let response = send_request(&[chain.get_host(), "v2/tx/", &transaction].join("")); // joining mutliple strings through array creationa and join method on the array
+    // specifying the return
+    println!("{:?}", &response);
     serde_json::from_str(&response).expect("Failed to parse JSON") // option return type handling
 }
 
@@ -56,7 +73,10 @@ fn convert_unix_ts(unix_int: &u64) -> String {
     datetime.format("%Y-%m-%d %H:%M:%S.%f").to_string()
 }
 
-pub fn calculate_wallet_balance(blockchain_address: &BlockchainAddress, address: &str) -> i32 {
+
+
+
+pub fn calculate_wallet_balance(chain:&Chain, blockchain_address: &BlockchainAddress, address: &str) -> i32 {
     let mut balance: i32 = 0;
     blockchain_address.txids.iter().rev().for_each(|tx_id| {
         // vout are actually transactions that went in
@@ -65,7 +85,7 @@ pub fn calculate_wallet_balance(blockchain_address: &BlockchainAddress, address:
         let mut subtotal_vout: i32 = 0;
 
         // reading the transaction details
-        let bc_transaction: BlockchainTransaction = blockchain_transaction_request(&tx_id);
+        let bc_transaction: BlockchainTransaction = blockchain_transaction_request(&chain,&tx_id);
 
         let match_address = String::from(address);
 
@@ -76,13 +96,13 @@ pub fn calculate_wallet_balance(blockchain_address: &BlockchainAddress, address:
             if tx.addresses.contains(&match_address) {
                 // since the value attribute is stored as string, we need to parse it to an integer first
                 // only append the value where the address matches
-                subtotal_vin += tx.value.parse::<i32>().unwrap();
+                subtotal_vin += tx.value.as_ref().expect("None value received").parse::<i32>().unwrap();
             }
         }
 
         for tx in &bc_transaction.vout {
             if tx.addresses.contains(&match_address) {
-                subtotal_vout += tx.value.parse::<i32>().unwrap();
+                subtotal_vout += tx.value.as_ref().expect("None value received").parse::<i32>().unwrap();
             }
         }
         balance += &subtotal_vout - &subtotal_vin;
@@ -91,10 +111,9 @@ pub fn calculate_wallet_balance(blockchain_address: &BlockchainAddress, address:
         println!("TX ID:                     {}", &bc_transaction.txid);
         println!(
             "Block Time:                {}",
-            convert_unix_ts(&bc_transaction.block_time)
-        );
-        println!("Satoshis IN:               {}", &subtotal_vout);
-        println!("Satoshis OUT:              {}", &subtotal_vin);
+            convert_unix_ts(&bc_transaction.block_time));
+        println!("Satoshi IN:               {}", &subtotal_vout);
+        println!("Satoshi OUT:              {}", &subtotal_vin);
         println!("BALANCE:                   {}", &balance);
         println!("-------------------------------------------------------");
     });
