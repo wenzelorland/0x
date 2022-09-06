@@ -27,14 +27,20 @@ pub struct Blockbook {
 #[serde(rename_all = "camelCase")]
 pub struct Backend {
     pub chain: String,
-    blocks: u64,
-    headers: u64,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    blocks: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    headers: Option<u64>,
     best_block_hash: String,
     difficulty: String,
-    size_on_disk: u64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    size_on_disk: Option<u64>,
     version: String,
-    subversion: String,
-    protocol_version: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    subversion: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    protocol_version: Option<String>,
 }
 
 #[derive(Deserialize, Debug)]

@@ -1,24 +1,38 @@
+use std::num::NonZeroU64;
+
 // Parsing the transaction json payload
 // where the response body has a repetetive pattern
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Vin {
-    txid: String,
-    vout: u64,
-    sequence: u64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    txid: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    vout: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    sequence: Option<u64>,
     n: u64,
     pub addresses: Vec<String>,
     is_address: bool,
-    pub value: String,
-    hex: String,
+    #[serde(skip_serializing_if = "Option::is_none", default="zero")]
+    pub value: Option<String>,
+    
+    #[serde(skip_serializing_if = "Option::is_none")]
+    hex: Option<String>,
+}
+
+fn zero() -> Option<String> {
+  Some(String::from("0"))
 }
 
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Vout {
-    pub value: String,
+    #[serde(skip_serializing_if = "Option::is_none", default="zero")]
+    pub value: Option<String>,
     n: u64,
-    hex: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    hex: Option<String>,
     pub addresses: Vec<String>,
     is_address: bool,
 }
@@ -26,8 +40,10 @@ pub struct Vout {
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct BlockchainTransaction {
+    
     pub txid: String,
-    version: u64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    version: Option<u64>,
     //lock_time: u64,
     // since the pattern is repetitive, we can use structs and
     // assign them to the struct fields to reflect the message pattern
@@ -39,9 +55,23 @@ pub struct BlockchainTransaction {
     confirmations: u64,
     pub block_time: u64,
     value: String,
-    value_in: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    value_in: Option<String>,
     fees: String,
-    hex: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    hex: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    ethereum_specific: Option<EthereumSpecific>
+}
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct EthereumSpecific {
+    pub status: u16,
+    pub nonce: u64,
+    pub gas_limit: u64,
+    pub gas_used: u64,
+    pub gas_price: String,
+    pub data: String
 }
 
 /*

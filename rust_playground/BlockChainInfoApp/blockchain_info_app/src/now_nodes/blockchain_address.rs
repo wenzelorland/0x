@@ -1,16 +1,43 @@
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
+pub struct Token {
+    
+    #[serde(rename = "type")]
+    pub token_type: String,
+    pub name: String,
+    pub contract: String,
+    pub transfers: u64,
+    pub symbol: String,
+    pub decimals: u16,
+    pub balance: String,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct BlockchainAddress {
     page: u64,
     total_pages: u64,
     items_on_page: u64,
     pub address: String,
-    balance: String,
-    total_received: String,
-    total_sent: String,
+    pub balance: String,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    total_received: Option<String>,
+    
+    #[serde(skip_serializing_if = "Option::is_none")]
+    total_sent: Option<String>,
+
     unconfirmed_balance: String,
     unconfirmed_txs: u64,
-    txs: u64,
+
+
+    pub txs: u64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub non_token_txs: Option<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub nonce:Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tokens: Option<Vec<Token>>,
     // Vector are very similar to lists, and since the response in the json field in this case represents a list structure
     // which in Rust is resembled by Vectors, thus create a Vector of Strings for that
     pub txids: Vec<String>,
