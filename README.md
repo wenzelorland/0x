@@ -6,7 +6,7 @@
 4. Does your VSCode window now have an terminal with the prefix  `node ➜ /workspaces/0x (main) $` open? Great you did it!
 
 ## Hardhat
-The hardhat environment is located at `hardhat_env`. You can test that its working properly by running `npx hardhat test`.
+The hardhat environment is located at `hardhat_env`. You can test that it's working properly by running `npx hardhat test`.
 
 ## Rust
 The rust playground is located at `rust_playground`. 
