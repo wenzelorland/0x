@@ -1,4 +1,4 @@
-// Combining Rc and RefCell to get multible mutable owners of the data
+// Combining Rc and RefCell to get multiple mutable owners of the data
 
 #[derive(Debug)]
 enum List {

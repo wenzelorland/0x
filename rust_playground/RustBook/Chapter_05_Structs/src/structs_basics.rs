@@ -1,4 +1,3 @@
-// Structs allow you to 
 // Structs allow you to group related data together (like object attributres in object oriented programming)
 // STRUCTS allow to access these elements by name instead of index (vs. tuple)
 struct User{
@@ -15,7 +14,8 @@ struct Rectangle{
     height:u32
 
     // Derived Traits 
-    // standard functionalities that access specific traits; primitive types implement these traits by default 
+    // standard functionalities that access specific traits; primitive types implement these traits by default
+    // examples would be the Deref trait. 
     // same as with python __str__ or __repr__ or 
 }
 

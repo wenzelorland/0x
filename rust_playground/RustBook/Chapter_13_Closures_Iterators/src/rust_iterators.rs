@@ -13,7 +13,6 @@ pub trait Iterator {
     // this needs to be mutable reference as we need to track at what item we are
     fn next(&mut self) -> Option<Self::Item>;
 
-    // methods with default implementation elided
 }
 
 #[derive(PartialEq, Debug)]
@@ -59,8 +58,7 @@ pub fn run() {
 
     for value in v1_iter {
         println!("Got: {}", value);
-    }
-;
+    };
     // this is a consumer method on the iterator -> in order to retrieve the result we need to call the collect mehtod on it
     // since iterators are lazy in rust and we need to "invoke" the result 
     // this creates an iterator over which we call a closure  and then we collect the result in which it transforms the iterator into a collection
@@ -120,7 +118,7 @@ mod tests {
     #[test]
     fn using_other_iterator_trait_methods() {
         let sum: u32 = own_iterator::Counter::new()
-            // the zip method ctakes 2 iterators and zip them up in one iterator by creating pairs
+            // the zip method takes 2 iterators and zips them up in one iterator by creating pairs
             // the first iterator will be the one zip is called on, while the second iterator is the one passed to the method
             .zip(own_iterator::Counter::new().skip(1)) // skip method will create an iterator that skips the first n elements, here the first element
             .map(|(a, b)| a*b) // map takes a closure which it will apply to each element of the iterator it is called on

@@ -52,10 +52,10 @@ pub fn generate_workout(intensity:u32, random_number:u32) {
     // Normal function are part of an explicit interface exposed to users
     // Closure are usually short and of narrrow context, so that the compiler is able to infer the types  
 
-    // wrapping the closure definition isnide the Cacher struct
+    // wrapping the closure definition inside the Cacher struct
     // the closure is passed to the "new" function within the Cacher struct to implement it for the Cacher struct
     // this will be set for the calculation field
-    // the varaible cached_results will always hold the Struct Cacher with implement closure function as self.calculation
+    // the variable cached_results will always hold the Struct Cacher with implement closure function as self.calculation
     // need the mut since the attribute self.value is also mutable.
     // cached_results then represents an instance of Cacher
     

@@ -19,7 +19,7 @@ fn main() {
 
     eprintln!("Searching for {}", config.query);
     eprintln!("In file {}", config.filename);
-    eprintln!("{:?}", args);
+    //eprintln!("{:?}", args);
 
     if let Err(e) = Chapter_12_CLI::run(config) { // if the code run(config) results in an error, then run the code inside the if block
         eprintln!("Application error: {}", e);

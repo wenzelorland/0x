@@ -10,7 +10,7 @@ impl Counter {
     }
 }
 
-// The standard library implements furhter methods on iterators by default, like filter, map, zip
+// The standard library implements further methods on iterators by default, like filter, map, zip
 impl Iterator for Counter {
     // Associated type -> Iterator will return Items of type u32
     type Item = u32;
@@ -26,7 +26,6 @@ impl Iterator for Counter {
         }
 
     }
-
 }
 pub fn run(){
     println!("Own Iterators");

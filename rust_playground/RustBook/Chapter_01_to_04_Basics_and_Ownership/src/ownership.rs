@@ -56,7 +56,7 @@ pub fn run(){
     // Ownership and Functions
     let s: String = String::from("hello");
     //takes_ownership(s); // this does not work, as the variable s is moved into the function (as providing functions with input is the same as assigning new variables)
-    // since s is not a primite type, it is moved and once it leaves the scope of takes_ownership, it is never returned, thus it is not accessible in the previous scope after takes_ownership has been executed
+    // since s is not a primitive type, it is moved and once it leaves the scope of takes_ownership, it is never returned, thus it is not accessible in the previous scope after takes_ownership has been executed
     // this works, since we pass a copy of s, so it is maintained within the current scope after execution
     takes_ownership(s.clone());
     
