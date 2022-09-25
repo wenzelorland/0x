@@ -28,7 +28,7 @@ where T : Fn(i32) -> i32 { // where T is anything the implement the Fn trait bou
     f(arg) + f(arg)
 }
 
-// -> this way we allow not only function pointers to be passed, but also closured which implement the Fn trait bound
+// -> this way we allow not only function pointers to be passed, but also closures which implement the Fn trait bound
 // -> we could also use other Trait bounds here, like FnMut, FnOnce
 
 
@@ -50,11 +50,12 @@ pub fn run(){
     }
 
     // initializing a vector of Status enums
-    let list_of_statuses: Vec<Status> =
-        // passing in the Value variant to .map;
-        // .map is going to treat Value like a function pointer, where the argument will be an unsigned integer u32 and the return value will be 
-        // a Value variant
-        // -> one could also use the s
-        (0u32..=20).map(Status::Value).collect();
     // -> this will return a vector of Status Enumes with initialized values ranging from 0 to 20
+    let list_of_statuses: Vec<Status> =
+        // a Value variant
+        (0u32..=20)
+        // passing in the Value variant to .map;
+        .map(Status::Value)
+        // .map is going to treat Value like a function pointer, where the argument will be an unsigned integer u32 
+        .collect();
 }

@@ -66,9 +66,6 @@ pub fn run (){
     fn generic_unsized<T: ?Sized>(t: &T) {
         // some code
     }
-
-
-
 }
 
 /*

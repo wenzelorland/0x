@@ -28,7 +28,7 @@ pub struct AveragedCollection {
     average: f64,
 }
 
-// If we want to the code outside of this object to alter the fields, then we can either make them public 
+// If we want the code outside of this object to alter the fields, then we can either make them public 
 // or we can provide methods in an implementation block where we only allow for specific changes to be made
 
 impl AveragedCollection {
@@ -61,7 +61,7 @@ impl AveragedCollection {
 }
 
 // Inheritance 
-// -> Ability of an object to inherit form another object's defintion, gaining the data and behaviour of the other object
+// -> Ability of an object to inherit from another object's defintion, gaining the data and behaviour of the other object
 // -> w/o having to define the behaviour and data by itself
 // Rust does NOT have this feature
 // However, there are features in Rust which can achieve the same.

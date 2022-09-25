@@ -41,9 +41,9 @@ impl Post {
         // the .take() method on the Optional will take the value of the Optional and leaving None in its place
         // the value is moved into the current_state (i.e. state before changing the state)
         // as take leaves None, when the value of the Option is transferred, self.state is equal to None
-        if let Some(state) = self.state.take() {
+        if let Some(current_state) = self.state.take() {
             // here we change the value from None to current_state.request_review() result
-            self.state = Some(state.request_review());
+            self.state = Some(current_state.request_review());
 
         }
     }

@@ -1,5 +1,5 @@
 // Macros allows code to write other code -> MetaProgramming
-// Macros can accept a variable amount of variables as inputs, while function have to declare a defintive amount of variable as inputs
+// Macros can accept a variable amount of variables as inputs, while functions have to declare a defintive amount of variable as inputs
 // Functions are called at runtime; Macros are expanded at compile time
 // Macros add complexity to the code overall
 

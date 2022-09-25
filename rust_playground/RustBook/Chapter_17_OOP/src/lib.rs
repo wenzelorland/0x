@@ -1,6 +1,6 @@
 // << TRAIT OBJECTS >>
 
-// Trait objects are useful when we do not know the full scope of objects that are going to be used at compile tim
+// Trait objects are useful when we do not know the full scope of objects that are going to be used at compile time.
 // E.g. a web gui with mutliple elements that can be drawn on the user side
 // -> the array of elements can be of any length
 // -> the only thing we know is that all these objects implement one common method, which is 'draw'
@@ -29,7 +29,7 @@ pub struct Screen {
 // Generic Types are type bound, this means that they can only work with a homogenous type of object at any given time
 // If you have a heterogenous set of items, such as here (e.g. Buttons, Boxes, Text), then using Trait Objects is the only way to accomplish this
 // as Generic types cannot use a mix of items
-// If the list of items is homogenous, then using Generics instead of Trait Objects is preferable, since there is not runtime cost in evaluating the types
+// If the list of items is homogenous, then using Generics instead of Trait Objects is preferable, since there is no runtime cost in evaluating the types
 
 // If you want the flexibility in executing code on any type that implements a certain trait, then trait objects are the way to go
 // which do have an computation cost

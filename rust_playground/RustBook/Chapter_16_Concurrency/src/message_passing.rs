@@ -5,7 +5,7 @@
 
 // A channel has two hubs, the transmitter and the receiver
 // Transmitter -> Upstream -> where the data is being sent to to be transmitted
-// Receiver -> Downstream -> where one listens to to receive the data being transmitted
+// Receiver -> Downstream -> where one listens to receive the data being transmitted
 
 // A channel is closed when either of the hubs is closed.
 
@@ -22,7 +22,7 @@ pub fn run() {
     let (tx, rx) = mpsc::channel(); // returns the tuple, (Sender<T>, Receiver<T>))
 
     // spawning a second transnmitter handle for the same channel
-    let tx2 = tx.clone()    ;
+    let tx2 = tx.clone();
     // we need to move ownership here, as it is not safe to share the sender -> tx (transmitter) between threads
     // only one thread at a time should have the ownership of the sender
     thread::spawn(move || {

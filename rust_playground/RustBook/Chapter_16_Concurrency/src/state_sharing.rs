@@ -69,6 +69,4 @@ pub fn run() {
     }
 
     println!("Counter Arc Mutex = {:?}, Counter value = {}", counter, *counter.lock().unwrap());
-
-
 }

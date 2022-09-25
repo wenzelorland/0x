@@ -8,9 +8,7 @@ use std::env; // for environment variables handling
 pub fn run(config:Config) -> Result<(), Box<dyn Error>> { // dyn Error means return any type of error
     // the ? takes care of the Error
     let contents: String = fs::read_to_string(config.filename)?; // the question mark will return the error in case the function call fails
-        //.expect("Something went wrong reading the file"); // since read_to_string returns either a Ok(String) or an Error; if the Error is returned then we catch it with .expect
-    
-    
+        //.expect("Something went wrong reading the file"); // since read_to_string returns either a Ok(String) or an Error; if the Error is returned then we catch it with .expect  
     let results = if config.case_sensitive {
         search(&config.query, &contents)
     } else {
@@ -34,7 +32,7 @@ pub struct Config {
 impl Config {
 
     // constructor function
-    // instead of taking the mutable String slide, we pass in the env::Args iterator 
+    // instead of taking the mutable String slice, we pass in the env::Args iterator 
     // we need to annotate the lifetime here, since Args is an own type and we return a string slice
     pub fn new(mut args: env::Args) -> Result<Config, &'static str> {
         // discarding the first element in the args iterator (it's only the path to the program)

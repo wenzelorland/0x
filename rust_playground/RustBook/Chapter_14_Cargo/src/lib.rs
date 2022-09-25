@@ -36,7 +36,7 @@ pub mod utils {
     }
 }
 
-/// Ads one to number given.
+/// Adds one to number given.
 /// 
 /// # Examples
 /// 

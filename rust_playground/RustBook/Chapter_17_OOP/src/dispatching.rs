@@ -12,7 +12,7 @@
 
 // Object Safety for Trait Objects
 // A trait is object safe when all the methods implemented on the trait have these 2 properties:
-// 1) Return type is not self, i.e. soes not return an instance of itself 
+// 1) Return type is not self, i.e. does not return an instance of itself 
 // 2) There are no generic parameters
 
 // concrete type cannot be inferred by the compiler otherwise

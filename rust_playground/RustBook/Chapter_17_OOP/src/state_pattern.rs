@@ -1,5 +1,5 @@
 // State Pattern in Rust
-// In the state pattern there some value which has internal state and that internal state is represented by state objects
+// In the state pattern there is some value which has internal state and that internal state is represented by state objects
 // Each state obejct is responsible for its own behaviour and deciding when to transition into antoher state
 // The value that holds the state objects knows nothing about the behavior of different states or when to transition to a different state
 

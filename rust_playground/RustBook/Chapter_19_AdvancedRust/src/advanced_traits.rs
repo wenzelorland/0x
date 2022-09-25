@@ -14,7 +14,7 @@ pub trait Iterator {
 }
 struct Counter {}
 
-// since we have this implementation of Iterator, we cannot ahve another implementation, where Item will be of a different type than u32
+// since we have this implementation of Iterator, we cannot have another implementation, where Item will be of a different type than u32
 impl Iterator for Counter {
     type Item = u32;
 
@@ -38,8 +38,6 @@ impl Iterator_Gen<u32> for Counter_Ex {
 
 // Default Generic Type Parameter
 // -> this allows implementators not needing to specify a concrete type unless it is different from the Default Type
-// Customizing operators
-// operators are found in the standard library ops
 
 // Reasons for using Default Generic Type Parameters
 // 1. Extending a type without breaking existing code 
@@ -47,6 +45,7 @@ impl Iterator_Gen<u32> for Counter_Ex {
 // 2. Allow customization for specific cases which most users won't need
 
 
+// Customizing operators are found in the standard library ops
 use std::ops::Add;
 
 #[derive(Debug, PartialEq)]
@@ -140,7 +139,7 @@ trait OutlinePrint: fmt::Display {
 // Orphan Rule:
 // --> we can implement a trait on a type when the trait or the type is defined within the crate
 // --> Newtype pattern allows to get around this restriction
-// --> by creating a tuple struct with one field which is the typewe are wrapping
+// --> by creating a tuple struct with one field which is the type we are wrapping
 // .> this thin wrapper around the type is local to the crate
 // .> so that any trait can be implemented on it
 

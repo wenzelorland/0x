@@ -9,7 +9,7 @@
 // In most OS, an executed program's code is run in a process and the OS manages running multiple processes at once
 // In the executed program there may be parts that are running independently, which are called threads
 
-// Because threads run simultaneously and independently, once has to take care of Race Conditions, where multiple threads can alter a specific data
+// Because threads run simultaneously and independently, one has to take care of Race Conditions, where multiple threads can alter a specific data
 // in an inconsistent order.
 // Deadlocks can also be an issue where two threads are both waiting for the other thread's resource and are stuck waiting as neither passes the resource
 // Lastly, because execution order is non-deterministic, bugs can appear that would otherwise not appear in single threaded design and which are hard to reproduce.
@@ -59,9 +59,10 @@ fn main() {
     handle.join().unwrap();
     // calling join on the JoinHandle will block the thread currently running, until the thread associated with the handle terminates
     // in this case the Main thread is blocked so long until the spawned thread is done executing
-    // the main therad the; // need to call the unwrap since .join() returns a Return type
+    // the main therad 
     
-    // USING MOVE CLOSURED WITH THREADS
+    // need to call the unwrap since .join() returns a Return type
+    // USING MOVE CLOSURES WITH THREADS
     let v = vec![1,2,3];
 
     // Rust figures out by itself what it needs for v -> i.e. a reference to v inside the closure
