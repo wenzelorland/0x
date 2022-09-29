@@ -1,11 +1,12 @@
 use chrono::{DateTime, NaiveDateTime, Utc};
 use std::collections::BTreeMap;
 use std::fs::File;
-use std::io::BufReader;
+use std::io::{BufReader, self};
+use web3;
 use web3::contract::{Contract, Options};
 use web3::helpers as w3h;
 use web3::transports::WebSocket;
-use web3::types::{Block, BlockNumber, Bytes, Transaction, TransactionId, H160, H256, U256};
+use web3::types::{Block, BlockNumber, Bytes, Transaction, TransactionId, H160, H256, U256, U64};
 use web3::Web3;
 
 pub fn wei_to_eth(wei_val: U256) -> f64 {
@@ -13,6 +14,27 @@ pub fn wei_to_eth(wei_val: U256) -> f64 {
     let res = res / 1_000_000_000_000_000_000.0;
     res
 }
+
+pub fn choose_block() -> BlockNumber {
+    println!("\nWhich blocknumber would you like to query? ('latest' or '' for latest, int for specific block)\n");
+    let mut input_text = String::new();
+    io::stdin()
+        .read_line(&mut input_text)
+        .expect("failed to read from stdin");
+
+    let trimmed = input_text.trim();
+    match trimmed {
+        "" => return BlockNumber::Latest,
+        "latest" => return BlockNumber::Latest,
+        _ => match trimmed.parse::<u64>() {
+            Ok(i) => {println!("{}", i);return BlockNumber::Number(U64::from(i))},
+            Err(..) => {
+                println!("unknown input: {} using latest", trimmed);
+                return BlockNumber::Latest
+            },
+        }
+    } 
+    }
 
 pub async fn get_block(web3s: &Web3<WebSocket>, block_no: BlockNumber) -> Block<H256> {
     let block = web3s

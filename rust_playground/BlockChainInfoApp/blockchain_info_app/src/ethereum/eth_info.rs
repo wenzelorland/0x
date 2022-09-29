@@ -2,23 +2,23 @@ use dialoguer::theme::ColorfulTheme;
 use dialoguer::Confirm;
 use web3::helpers as w3h;
 
-use web3::types::{BlockNumber, H160, U64};
+use web3::types::{H160, U64, BlockNumber};
 
 use crate::ethereum::utils::{
     get_func_signature, get_token_name, get_transaction, is_smart_contract, wei_to_eth,
 };
 
-use super::utils::get_block;
+use super::utils::{get_block, choose_block};
 
 #[tokio::main]
-pub async fn latest_block(host: &str) {
+pub async fn ethereum_info(host: &str) {
     dotenv::dotenv().ok();
 
     let websocket = web3::transports::WebSocket::new(host).await.unwrap();
     let web3s = web3::Web3::new(websocket);
-    let block_no = BlockNumber::Latest;
-
+    let block_no = choose_block();
     let block = get_block(&web3s, block_no).await;
+    
 
     if Confirm::with_theme(&ColorfulTheme::default())
         .with_prompt("Do you want to query all transations in this block?")
