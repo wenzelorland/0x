@@ -4,7 +4,7 @@ use core::time;
 use std::{io, thread};
 
 use dialoguer::{theme::ColorfulTheme, Select};
-use ethereum::eth_info::latest_block;
+use ethereum::eth_info::ethereum_info;
 #[macro_use]
 extern crate serde_derive;
 extern crate chrono;
@@ -95,8 +95,8 @@ fn main() {
     match selection {
         0 => now_nodes_app("bitcoin",&dotenv::var("BC_WALLET").expect("Error reading env var.")),
         1 => now_nodes_app("ethereum",&dotenv::var("ETH_WALLET").expect("Error reading env var.")),
-        2 => latest_block("ws://127.0.0.1:8546"),
-        3 => latest_block(
+        2 => ethereum_info("ws://127.0.0.1:8546"),
+        3 => ethereum_info(
             &[
                 "wss://mainnet.infura.io/ws/v3/",
                 &dotenv::var("INFURA_API_KEY").expect("Could not find key: INFURA_API_KEY"),
