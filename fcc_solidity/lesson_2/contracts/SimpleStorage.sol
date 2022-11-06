@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPX-License-Identifier: MIT
 
 pragma solidity >=0.6.0 < 0.9.0; //sdadas
 //pragma solidity ^0.6.0;// means that the version is above 0.6.0, but below 0.7.0
