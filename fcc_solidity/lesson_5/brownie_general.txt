@@ -1,0 +1,14 @@
+Brownie comes with pre-configured networks which are addressable.
+You can view the list of available networks through "brownie networks list".
+
+Networks which are listed under the tab "Development" are all temporary networks.
+After the scripts completes, these networks are erased and spun up fresh when a new script is executed.
+
+Networks under "Ethereum" are persisted.
+
+NOTE: For Infura, the PROJECT_ID is now called the API-Key under "ENDPOINTS" of the projects.
+Deploying to the testnet:
+brownie run scripts/deploy.py --network goerli
+
+Once deployed to the network, everything that is deployed will be saved in the build/deployments folder for future references like contract addresses etc.
+Changes to local blockchains will not be saved here.
