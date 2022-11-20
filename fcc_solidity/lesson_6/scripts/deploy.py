@@ -1,5 +1,5 @@
 from brownie import FundMe, MockV3Aggregator, network, config
-from scripts.helpful_scripts import get_account, deploy_mocks
+from scripts.helpful_scripts import get_account, deploy_mocks, LOCAL_BLOCKCHAIN_ENVIRONMENTS
 
 def deploy_fund_me():
     account = get_account()
@@ -9,7 +9,7 @@ def deploy_fund_me():
     # -> Here we can differentiate which networks we want to access and which respective address to pull
     
     # --> This setup allows for local and testnet agnostic deployments <-- 
-    if network.show_active() != 'development':
+    if network.show_active() not in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
         price_feed_address = config["networks"][network.show_active()]["eth_usd_price_feed"]
     else:
         deploy_mocks()
@@ -23,7 +23,7 @@ def deploy_fund_me():
     )
 
     print(f"Contract deployted to {fund_me.address}") # ,publish_source=True) for automatically publishing the associated code of the deployed smart contract
-
+    return fund_me
 
 
 def main():
