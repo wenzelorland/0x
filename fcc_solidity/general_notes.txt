@@ -74,3 +74,11 @@ brownie networks add development mainnet-fork-dev cmd=ganache-cli host=http://12
 # Forking from alchemy
 brownie networks add development mainnet-fork-dev cmd=ganache-cli host=http://127.0.0.1 fork='https://eth-mainnet.g.alchemy.com/v2/$WEB3_ALCHEMY_API_KEY' accounts=10 mnemonic=brownie port=7545
 -> note: make sure the port you are using is the same as in the ganache GUI, when starting up ganache
+
+### Test Deployment ###
+Where should the test run?
+1. Brownie Ganache Chain with Mocks : Should always pass.
+2. Testnet: Always should pass (but only for Integeration testing)
+3. Brownie mainnet-fork: Optional to pass
+4. Custom mainnet-fork: Optional to pass
+5. Self/Local Ganache: Not necessary, but good for tinkering
