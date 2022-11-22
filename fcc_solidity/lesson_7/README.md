@@ -37,4 +37,15 @@ First, requestRandomness is called from the VRFConsumerBase contract and then th
 For chainlink oracle, one has to pay oracle gas, which is denominated in LINK.
 For price-feeds, there are available sponsors which are paying for these oracles and thus they are offered for free.
 
-Getting a random number follows the request and receive route. 
+Getting a random number follows the request and receive route.
+
+
+### Addind Contract to Brownie ###
+Contracts that are added into the contracts folder will all be compiled with brownie when brownie compile.
+This means that they are then accessible in the whole project context through from brownie import ...
+
+### Testing ###
+One typically creates two folders in the tests folder -> `integration´ and *unit*
+Within unit tests, you want to actually test every line of the smart contract.
+Brownie command to run specific test on a particular network:
+brownie test -k test_get_entrance_fee --network goerli
