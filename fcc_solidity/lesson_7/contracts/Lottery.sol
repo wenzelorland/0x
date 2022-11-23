@@ -23,6 +23,11 @@ contract Lottery is VRFConsumerBase, Ownable{
     uint256 public fee;
     bytes32 public keyhash;
     
+    // new type of event -> similar to enums
+    event RequestedRandomness(bytes32 requestId);
+
+
+
     // adding an additional constructor for the VRFConsumerBase contract
     // -> multi-level constructor to account for constructors for multiple contracts which are deployed in the process
     constructor(
@@ -97,6 +102,9 @@ contract Lottery is VRFConsumerBase, Ownable{
     */
     lottery_state = LOTTERY_STATE.CALCULATING_WINNER;
     bytes32 requestId = requestRandomness(keyhash, fee);
+
+    // event emission
+    emit RequestedRandomness(requestId);
     }
 
     // receive
