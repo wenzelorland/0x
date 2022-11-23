@@ -16,14 +16,12 @@ brownie run scripts/deploy.py --network goerli
 Once deployed to the network, everything that is deployed will be saved in the build/deployments folder for future references like contract addresses etc.
 Changes to local blockchains will not be saved here.
 
-Brownie comsole 
--> 
+Brownie console  
 ```bash
 brownie console
 ``` 
-in CLI
-here we can directly interact with the deployed contracts and addresses
--> it's essentially an interactive python shell with browny in the background
+, here we can directly interact with the deployed contracts and addresses.
+It's essentially an interactive python shell with browny in the background
 
 ## External Dependencies
 Telling brownie external dependencies by including this into the brownie-config.yaml file
@@ -46,14 +44,14 @@ This is for publishing the source code of the smart contract.
 ## Mocking Oracle Feeds on Local Chains
 Instead of referencing an external oracle source, one can deploy a mock contract feed on the local chain to 
 receive a respective mock pricing feed for testing.
--> creating a new test folder in the contracts folder - this is typically where the mock contracts are stored in the brownie folder structure.
--> For ready to use mock oracle smart contracts, one can use chainlink-mix as a good reference.
+- creating a new test folder in the contracts folder - this is typically where the mock contracts are stored in the brownie folder structure.
+- For ready to use mock oracle smart contracts, one can use chainlink-mix as a good reference.
 https://github.com/smartcontractkit/chainlink-mix
 
 ## Attaching a local Ganache instance to Brownie
 brownie networks list
 
-::: let brownie remeber deployments to a ganache chain ::`
+Let brownie remeber deployments to a ganache chain:
 ```bash
 brownie networks add Ethereum ganache-local host=http://127.0.0.1:7545 chainid=1337
 ```
@@ -83,7 +81,7 @@ This is why it is perfectly suited to use a forked Mainnet for simulation.
 ```bash
 brownie networks add development mainnet-fork-dev cmd=ganache-cli host=http://127.0.0.1 fork='https://mainnet.infura.io/v3/$WEB3_INFURA_PROJECT_ID' accounts=10 mnemonic=brownie port=7545
 ```
-## Forking from alchem`
+## Forking from alchemy
 ```bash
 brownie networks add development mainnet-fork-dev cmd=ganache-cli host=http://127.0.0.1 fork='https://eth-mainnet.g.alchemy.com/v2/$WEB3_ALCHEMY_API_KEY' accounts=10 mnemonic=brownie port=7545
 ```
@@ -108,33 +106,36 @@ How to Test:
 3. testnet
 
 ## Randomness in Decentralized Systems
--> since blockchain is deterministic system, random numbers cannot be just generated the classic way since validation of random numbers is not feasible,
--> as results within validation computations could vary vastly and thus no consensus would be found eventually
--> i.e. the parties will not be able to agree on the random number
+- since blockchain is deterministic system, random numbers cannot be just generated the classic way since validation of random numbers is not feasible,
+- as results within validation computations could vary vastly and thus no consensus would be found eventually
+- i.e. the parties will not be able to agree on the random number
 
---> solution: base the random numbers based on attributes from the system itself -> pseudo-random numbers
---> truly random numbers are impossable for decentralized systems by design!
+- solution: base the random numbers based on attributes from the system itself -> pseudo-random numbers
+- truly random numbers are impossable for decentralized systems by design!
 
--> pseudo-random numbers can be hacked / exploited, when insecure pseudo-random number methods are used!
-// a very bad way of generating a pseudo-random number is taking a globally available number in the system, e.g. a chainid, blocknumber etc and hash it
-// or e.g. msg.value
-// msg.send is also a globally available variables which can be found in the solidity documentation, e.b. block.difficulty
-// you are essentially taking seemingly random numbers and shuffling them together and hashing then
-// the problem is that it can be reverse engineered, as the hashing functions fully deterministic
-// hashing does not introduce any randomness
+Pseudo-random numbers can be hacked / exploited, when insecure pseudo-random number methods are used!
+- a very bad way of generating a pseudo-random number is taking a globally available number in the system, e.g. a chainid, blocknumber etc and hash it or e.g. msg.value
+- msg.send is also a globally available variables which can be found in the solidity documentation, e.b. block.difficulty
+- you are essentially taking seemingly random numbers and shuffling them together and hashing then
+- the problem is that it can be reverse engineered, as the hashing functions fully deterministic
+- hashing does not introduce any randomness
 
 ## Secure Random Numbers in Decentralized Systems
--> https://docs.chain.link/vrf/v2/subscription/examples/get-a-random-number 
-Chainling offers a solution for this with Chainlink VRF (verifiable random function) -> provides verifiable randomness.
+
+https://docs.chain.link/vrf/v2/subscription/examples/get-a-random-number 
+
+Chainlink offers a solution for this with Chainlink VRF (verifiable random function) -> provides verifiable randomness.
+
 In essence, there is an onchain smart contract by chainlink which verifies the random number that is originating from the chainlink node.
 This on-chain consumer contract needs to be funded first, to make the transaction to the oracle to be able to pay the gas needed for the oracle request.
 First the contract is requesting oracle node, then the oracle node executes a function within the smart contract and effectively stores the random value into the smart contract by changing its state.
 This way, we can now access the random number on the smart contract that we have deployed.
+
 The process is represented by 2 -asynchroneous transactions.
 Technically, the smart contract is calling the VRF coordinator, which the node reads. The node than calls the VRF coordinator to call the fulfillRandomness callback function on the deployed smart contract.
 First, requestRandomness is called from the VRFConsumerBase contract and then the callback rawfulfillRandomness (in the VRFConsumerBase contract) is called from the chainlink node (through the VRFCoordinator) preocessing the random number and thus storing it within the VRFConsumerBase deployed contract.
 
-For chainlink oracle, one has to pay oracle gas, which is denominated in LINK.
+For a chainlink oracle one has to pay oracle gas, which is denominated in LINK.
 For price-feeds, there are available sponsors which are paying for these oracles and thus they are offered for free.
 
 Getting a random number follows the request and receive route.
@@ -152,7 +153,7 @@ Within unit tests, you want to actually test every line of the smart contract.
 Brownie command to run specific test on a particular network:
 ```bash
 brownie test -k test_get_entrance_fee --network goerli
-````
+```
 
 ### Logging / Printing On-Chain ###
 To record certain state changes and results of events within a smart contract, one can use events which will store the action and the corresponding result.
@@ -166,4 +167,3 @@ e.g. for the chainlink-mix repo do:
 
 ````bash
 brownie bake chainlink-mix
-```
