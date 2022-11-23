@@ -1,4 +1,4 @@
-### Brownie Networks ###
+## Brownie Networks
 Brownie comes with pre-configured networks which are addressable.
 You can view the list of available networks through "brownie networks list".
 
@@ -9,18 +9,23 @@ Networks under "Ethereum" are persisted.
 
 NOTE: For Infura, the PROJECT_ID is now called the API-Key under "ENDPOINTS" of the projects.
 Deploying to the testnet:
+```bash
 brownie run scripts/deploy.py --network goerli
+````
 
 Once deployed to the network, everything that is deployed will be saved in the build/deployments folder for future references like contract addresses etc.
 Changes to local blockchains will not be saved here.
 
 Brownie comsole 
--> brownie console in CLI
+-> 
+```bash
+brownie console
+``` 
+in CLI
 here we can directly interact with the deployed contracts and addresses
 -> it's essentially an interactive python shell with browny in the background
 
-
-### External Dependencies ### 
+## External Dependencies
 Telling brownie external dependencies by including this into the brownie-config.yaml file
 dependencies:
 '# - <organization/repo>@<version>
@@ -38,22 +43,26 @@ in a programmatic way.
 This is for publishing the source code of the smart contract.
 
 
-### Mocking Oracle Feeds on Local Chains ###
+## Mocking Oracle Feeds on Local Chains
 Instead of referencing an external oracle source, one can deploy a mock contract feed on the local chain to 
 receive a respective mock pricing feed for testing.
 -> creating a new test folder in the contracts folder - this is typically where the mock contracts are stored in the brownie folder structure.
 -> For ready to use mock oracle smart contracts, one can use chainlink-mix as a good reference.
 https://github.com/smartcontractkit/chainlink-mix
 
-
-### Attaching a local Ganache instance to Brownie ###
+## Attaching a local Ganache instance to Brownie
 brownie networks list
 
-::: let brownie remeber deployments to a ganache chain :::
+::: let brownie remeber deployments to a ganache chain ::`
+```bash
 brownie networks add Ethereum ganache-local host=http://127.0.0.1:7545 chainid=1337
+```
 or whatever parameters are specified for the local ganache blockchain.
 To access this chain, we need to tell brownie which network to use
---> brownie run scripts/deploy.py --network ganache-local
+--> 
+```bash
+brownie run scripts/deploy.py --network ganache-local
+````
 
 For this we also need to amend the helpful_scripts.py, so that we expand the definition of "development" networks.
 Since we have added the local blockchain no to the Development section of the networks, Brownie will actually save all interactions with contracts
@@ -64,19 +73,23 @@ with these contracts anymore.
 Generally, in the networks section of the brownie-config.yaml the default is set to : development, i.e. when no --network flag is set, brownie will default and spun up a development chain
 One can adjust this to another network, so that the default case will be adjusted.
 
-### Mainnet Forking ### 
+## Mainnet Forking
 A forked blockchain takes an exact copy of an existing blockchain. The advantage here is that the forked blockchain already comes with all 
 the contracts deployed of the to be forked blockchain, including the Price feed contracts, transaction data and all protocol contracts.
 This is why it is perfectly suited to use a forked Mainnet for simulation.
 
-### Creating Own custom forked network ###
-# Forking from infura has some performance issues though
+### Creating Own custom forked network
+## Forking from infura has some performance issues though
+```bash
 brownie networks add development mainnet-fork-dev cmd=ganache-cli host=http://127.0.0.1 fork='https://mainnet.infura.io/v3/$WEB3_INFURA_PROJECT_ID' accounts=10 mnemonic=brownie port=7545
-# Forking from alchemy
+```
+## Forking from alchem`
+```bash
 brownie networks add development mainnet-fork-dev cmd=ganache-cli host=http://127.0.0.1 fork='https://eth-mainnet.g.alchemy.com/v2/$WEB3_ALCHEMY_API_KEY' accounts=10 mnemonic=brownie port=7545
+```
 -> note: make sure the port you are using is the same as in the ganache GUI, when starting up ganache
 
-### Test Deployment ###
+## Test Deployment
 Where should the test run?
 1. Brownie Ganache Chain with Mocks : Should always pass.
 2. Testnet: Always should pass (but only for Integeration testing)
@@ -84,7 +97,7 @@ Where should the test run?
 4. Custom mainnet-fork: Optional to pass
 5. Self/Local Ganache: Not necessary, but good for tinkering
 
-### Lesson_7
+## Lesson_7
 1. Users can enter lottery with ETH based on a USD fee
 2. An admin will choose when the lottery is over
 3. The lottery will select a random winner
@@ -94,7 +107,7 @@ How to Test:
 2. development
 3. testnet
 
-### Randomness in Decentralized Systems
+## Randomness in Decentralized Systems
 -> since blockchain is deterministic system, random numbers cannot be just generated the classic way since validation of random numbers is not feasible,
 -> as results within validation computations could vary vastly and thus no consensus would be found eventually
 -> i.e. the parties will not be able to agree on the random number
@@ -110,7 +123,7 @@ How to Test:
 // the problem is that it can be reverse engineered, as the hashing functions fully deterministic
 // hashing does not introduce any randomness
 
-### -> Secure random numbers <-- ###
+## Secure Random Numbers in Decentralized Systems
 -> https://docs.chain.link/vrf/v2/subscription/examples/get-a-random-number 
 Chainling offers a solution for this with Chainlink VRF (verifiable random function) -> provides verifiable randomness.
 In essence, there is an onchain smart contract by chainlink which verifies the random number that is originating from the chainlink node.
@@ -126,16 +139,20 @@ For price-feeds, there are available sponsors which are paying for these oracles
 
 Getting a random number follows the request and receive route.
 
-
-### Addind Contract to Brownie ###
+## Addind Contract to Brownie
 Contracts that are added into the contracts folder will all be compiled with brownie when brownie compile.
-This means that they are then accessible in the whole project context through from brownie import ...
+This means that they are then accessible in the whole project context through 
+```python
+from brownie import 
+```
 
-### Testing ###
+## Testing ###
 One typically creates two folders in the tests folder -> `integration´ and *unit*
 Within unit tests, you want to actually test every line of the smart contract.
 Brownie command to run specific test on a particular network:
+```bash
 brownie test -k test_get_entrance_fee --network goerli
+````
 
 ### Logging / Printing On-Chain ###
 To record certain state changes and results of events within a smart contract, one can use events which will store the action and the corresponding result.
@@ -144,3 +161,9 @@ Events will be a container which one can push (emit) values to and then access i
 ### Brownie Mixes ###
 github.com/brownie-nix/
 -> this repo holds plenty resources for boilerplate code for smart contract deployment
+To access any repo within this collection, you can just "brownie bake" it 
+e.g. for the chainlink-mix repo do:
+
+````bash
+brownie bake chainlink-mix
+```
