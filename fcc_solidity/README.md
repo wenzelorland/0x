@@ -113,16 +113,6 @@ Where should the test run?
 4. Custom mainnet-fork: Optional to pass
 5. Self/Local Ganache: Not necessary, but good for tinkering
 
-## Lesson_7
-1. Users can enter lottery with ETH based on a USD fee
-2. An admin will choose when the lottery is over
-3. The lottery will select a random winner
-
-How to Test:
-1. mainnet-fork
-2. development
-3. testnet
-
 ## Randomness in Decentralized Systems
 - since blockchain is deterministic system, random numbers cannot be just generated the classic way since validation of random numbers is not feasible,
 - as results within validation computations could vary vastly and thus no consensus would be found eventually
@@ -165,7 +155,7 @@ This means that they are then accessible in the whole project context through
 from brownie import 
 ```
 
-## Testing ###
+## Testing
 One typically creates two folders in the tests folder -> `integration´ and *unit*
 Within unit tests, you want to actually test every line of the smart contract.
 Brownie command to run specific test on a particular network:
@@ -173,15 +163,25 @@ Brownie command to run specific test on a particular network:
 brownie test -k test_get_entrance_fee --network goerli
 ```
 
-### Logging / Printing On-Chain ###
+## Logging / Printing On-Chain
 To record certain state changes and results of events within a smart contract, one can use events which will store the action and the corresponding result.
 Events will be a container which one can push (emit) values to and then access it afterwards. 
 
-### Brownie Mixes ###
+## Brownie Mixes
 github.com/brownie-nix/
 -> this repo holds plenty resources for boilerplate code for smart contract deployment
 To access any repo within this collection, you can just "brownie bake" it 
 e.g. for the chainlink-mix repo do:
 
-````bash
+```bash
 brownie bake chainlink-mix
+```
+
+## ERC-20 Tokens
+To create an ERC-20 token, one needs to create a contract with the functions and requirements as defined in [EIP-20](https://eips.ethereum.org/EIPS/eip-20).
+There are multiple templates available open source, which can be used as a base to create an ERC-20 token from scratch.
+Visit [OpenZeppelin Code Resources on ERC-20](https://docs.openzeppelin.com/contracts/4.x/erc20) for reference on building an ERC-20 contract.
+
+
+
+
