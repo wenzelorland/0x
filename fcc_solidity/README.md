@@ -1,7 +1,25 @@
+# FreeCodeCamp Solidity Python Course
+[Course-Link](https://github.com/smartcontractkit/full-blockchain-solidity-course-py)
+
+## Status
+- [x]  Lesson 0 - Welcome to Blockchain
+- [x]  Lesson 1 - Welcome to Remix
+- [x]  Lesson 2 - Storage Factory
+- [x]  Lesson 3 - Fund Me
+- [x]  Lesson 4 - [Web3.py](http://Web3.py) Simple Storage
+- [x]  Lesson 5 - Brownie Simple Storage
+- [x]  Lesson 6 - Brownie Fund Me
+- [x]  Lesson 7 - Lottery - SmartContract-Mix
+- [x]  Lesson 8 - Chainlink Mix
+- [ ]  Lesson 9 - ERC20s, EIPs, and Token Standard
+- [ ]  Lesson 10 - Defi & Aave
+- [ ]  Lesson 11 - NFTs
+- [ ]  Lesson 12 - Upgrades
+- [ ]  Lesson 13 - Full Stack Defi
+
 ## Brownie Networks
 Brownie comes with pre-configured networks which are addressable.
 You can view the list of available networks through "brownie networks list".
-
 Networks which are listed under the tab "Development" are all temporary networks.
 After the scripts completes, these networks are erased and spun up fresh when a new script is executed.
 
