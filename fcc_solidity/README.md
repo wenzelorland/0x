@@ -17,6 +17,167 @@
 - [ ]  Lesson 12 - Upgrades
 - [ ]  Lesson 13 - Full Stack Defi
 
+## Smart Contracts
+Smart contracts are a self executed set of instructions which is executed without the need of a 3rd party.
+
+Chainlink allows for unlimited smart contract customization.
+
+Hybrid smart contracts are smart contracts with an off-chain component.
+
+Chainlink is blockchain agnostic.
+
+### Features of Blockchains**
+
+1. Decentralized → Blockchain is being run by independent node operators; no centralized party can control the whole system.
+2. Transparency & Flexibility
+   Everything is public and pseudo-anonymized through public - private key paris
+    
+3. Speed and Efficiency
+4. Security and Immutability → cannot be tempered with or corrupted; even when mutliple operators fail; hacking the blockchain is so much harder than hacking a centralized system
+5. Removal of counterparty risk → no conflict of interest for the potential intermediary in traditional systems
+6. Allow for Trust Minimizied or Trustless Agreements → we do not have to trust the party that we engage with on a political brand based trust level since the code of the smart contract stands for itself
+7. Hybrid Smart Contract combine on and off-chain worlds
+   Enables a free(dom) & trustless Environment
+
+dApp’s and smart contracts free the user of the instrinsic motivations behind intermediaries and deliver the instant and efficient nature of settlement of transactions. 
+
+### DAOs
+
+Decentralized Autonomous Organizations which are organized in a decentralized environment and are governed by the user of the respective tokens.
+
+### Transaction Information
+
+Transaction Hash uniquely identifies the transaction by its hash.
+
+#### Gas
+
+Gas is a unit of computational measure. The more computation a transaction uses, the more gass you have to pay for it. Every transaction that happens on-chain pays a gas-fee to node operators. Any time the state of the blockchain is changed it involves the the need to pay gas for the operation that led to the state transition. The amout of gas used and how much one pays depends on the computational complexity of the transaction. 
+
+Sending ETH to 1 address, is cheaper than sending 1 ETH to 100 addresses. 
+
+Gas: Measure of computation use
+
+Gas Price: How much it costs per unit of gas
+
+Gas Limit: Max amount of gas in a transaction
+
+Transaction Fee: Gas Used x Gas Price
+
+e.g. `21 000 gas @ 1 GWEI per gas = 21 000 GWEI = 21 000 * 1e-9 ETH`
+
+[GasInfo](http://www.ethgasstation.info). Setting a higher Gas Price let you incentivice the node operators to pick up your transaction into the block faster than for transactions with a lower gas price. 
+
+Gas price is based on the demand of computation on the particular blockchain and represents the “worth” of block space. 
+
+#### Hash 
+
+Unique fixed length string, meant to identify a piece of data. They are created by placing said data into a “hash function”. 
+
+### Blockchain Information
+
+[Blockchain Demo](https://andersbrownworth.com/blockchain/)
+
+#### Node
+
+A single instance in a network running the blockchain. 
+
+#### Block Mining
+
+Miners find a value for the integer Nonce, that together with the Data inside the block creates a hash which has a pre-determined amount of leading zero’s (determined by the difficulty target). They will essentially just try out multiple combinations until they have found one valid hash which meets the PoW criteria difficulty target. This can only be performed by brute-force trying. Blockchains may introduce slightly differenct concepts of mining, but mostly they are a variant of the above for proof of work blockchains. Mining is the process of finding the solution to the blockchain problem. Nodes get paid for mining blocks. A block is a list of transactions mined together.
+
+[Blockchain Demo](https://andersbrownworth.com/blockchain/block)
+
+#### Nonce
+
+A number used once to find the solution to the blockchain number. In Ethereum it is also used to define the transaction number for an account / address.
+
+### Blockchain
+
+[Blockchain](https://andersbrownworth.com/blockchain/blockchain)
+
+Because of the chained structure and the fact that each block is referencing its predecessor and the corresponding hash of the predecessor is also hashed to receive the current block’s hash, whenever someone tries to change / alter past data for past blocks they will instantly invalidate their blockchain state, as the hashes of the respective blocks would not reference the correct information anymore and would thus lead to an invalidation of the whole blockchain, so that node operators would not accept this blockchain version. → Immutability of blockchains.
+
+#### Distributed
+
+The decentralized nature of blockchains ensures that even if some operators fail, the blockchain still persists to exist and continues to work regardless of failing operating members. Since multiple operators are working on the same blockchain, it is infeasible for a single attacker to try to force an altered version of the blockchain to the whole network, since it would be instantly disregarded because their version is invalidated instantly by other operators when they try to validate the version of the attacker. The attacker then has essentially forked the blockchain which other operators will not accept and will continue to operate the original blockchain. They have no centralized point of authority. ⇒ Blockchains are resillient. A node acting maliciously will be swiftly cut out from the network.
+
+[Blockchain Demo](https://andersbrownworth.com/blockchain/distributed)
+
+#### Tokens 
+
+Token transaction are placed into the block and then hashed with the block details. The transactions themselves are also hashed and referenced for later validation. This also leads to valid and temper-proof transactions which solve the double spending problem.
+
+[Blockchain Demo](https://andersbrownworth.com/blockchain/tokens)
+
+#### Coinbase Transaction
+
+[Blockchain Demo](https://andersbrownworth.com/blockchain/coinbase)
+
+#### Public and Private Keys
+
+`Private Key` → is essentially a random integer of typically 256-bit length. 
+
+`Public Key` → is the corresnponding value that corresponds to the public key value from a specific mathematical function (see elliptic curve cryptography)
+
+One can sign a message with the private key, while no one can derive the private key from the signed message. 
+
+However, they can validate with the help of the public key that it was indeed the private key that corresponds to that public key which was used to sign the message (signature). I.e. the signature matches to the corresponding public key without ever revealing the true private key.  
+
+The Ethereum address is actually the public key hashed with Keccak-256 algorithm and take the last 20-bytes, which then corresponds to the address to that public key. 
+
+#### Signing a transaction:
+
+A “one way” process. Someone with a private key signs a transaction by their private key being hashed with their transaction data. Anyone can then verify this new transaction has with the corresponding public key. 
+
+#### Consensus
+Mechaism used in a network to agree on what the state of a blockchain is. 
+
+**Traits of Consensus Mechanisms: 1) Chain Selection + 2) Sybil Resistance**
+
+1. How do we know which current blockchain is the valid one? → which latest produce block is acutally the last valid one.
+    1. E.g. whichever chains has the most number of blocks is declared the canonical chain, i.e. accepted as the valid current blockchain → Longest Chain Rule
+    2. One can also use the number of confirmations as another way to determine whichever blockchain is the valid one
+2. e.g. Proof of work or Proof of Stake, it defines a process to figure out who will be the block author and defines the ability of a blockchain to defend itself against multiple users creating pseudo-anon accounts to take over the blockchain by influencing the whole network
+    1. In PoW a node has to go through a very expensive process of mining to come up with a valid block hash. This means that even if one tries to temper with the transaction data, one still needs to come up with the computational resources to actually create the transaction to be broadcasted to the network, making it prohibitively expensive to perform such Sybil attack
+
+Nakamoto Consensus = Longest Chain is Valid Chain + Proof of Work, which Bitcoin uses.
+
+Blocktimes correlate with the difficulty target, i.e. if it is more difficult to come up with the “right” block nonce, the block time will typically also be longer.
+
+Block confirmations is the number of block added past the respective block. I.e. when the number =2 then 2 blocks have been added to the chain after this particular block which are chain-referencing this block and are ahead of it in the blockchain.
+
+**Sybil Attack i) vs 51 % attack ii)**
+
+i) references a situation where the attacker actually tries to attack the decentrality of the network by pretending to be multiple users while actually being one entity controlling multiple pseudo users.
+
+ii) this refers to a situation where the attacker tries to gain 51% influence over the network so that she can decide which chain is the canonical and to enforce her version of the chain to be the canonical blockchain for the whole network to adapt, essentially forking the original chain which will then be adopted by the network.
+
+The bigger the blockchain is the more difficult it is to attack it because of the decentralized nature of the blockchain.
+
+## Proof of Stake (Pos)
+
+Nodes put up collateral as a sybil resistance mechanism to show that they are going to behave in the network. When they misbehave, then their stake will be slashed as punishment. The nodes then become validors. Nodes are randomly chosen to become the proposer of new blocks. The rest of the validators then validate if the the proposer node has proposed a valid block. Since blockchains are fully deterministic systems, the randomness aspect is actually engineered through other means like RANDAO, which is a mechanism for generating “reasonably random” numbers in a decentralized way. 
+
+The core idea behind RANDAO is to have a large group of people come together to generate a random number, instead of simply trusting one person to do it on everyone's behalf. This is what Ethereum uses.
+
+### Sharding
+
+Is essentially a concept of a a blockchain of blockchains which addresses the scalability aspect of blockchains. Since there are multiple blockchains (shards), the transaction throughput is siginificantly higher, as all these shards are ultimately merged into the “one” blockchain who keeps track of the overall cononical chain.  
+
+**Layer 1**
+
+Base layer blockchain implementation
+
+**Layer 2**
+
+Any application built on top of a layer 2.
+
+**Rollups (layer 2s which also tackle the scalability aspect)**
+
+A rollup is kind of like a sharded chain, which ultimately rolls up the transactions that happen on its layer to the layer 1 they are connected to. → See Optimism and Arbitrum for Ethereum. They adopt the security of the layer 1 while improving the scalability.
+
+Sidechains are different from rollups as they do not derive the security from the layer 1 but from their own protocol implementation.
+
 ## Brownie Networks
 Brownie comes with pre-configured networks which are addressable.
 You can view the list of available networks through "brownie networks list".
@@ -41,6 +202,10 @@ brownie console
 , here we can directly interact with the deployed contracts and addresses.
 It's essentially an interactive python shell with browny in the background
 
+## Contract Interfaces
+When saving a contract interface into brownie's *interfaces* folder, it is common practice to put an I (upper capital i) in front of the contract name.
+
+I.e. when referring to Weth.sol one puts IWeth.sol.
 ## External Dependencies
 Telling brownie external dependencies by including this into the brownie-config.yaml file
 dependencies:
@@ -78,7 +243,7 @@ To access this chain, we need to tell brownie which network to use
 --> 
 ```bash
 brownie run scripts/deploy.py --network ganache-local
-````
+```
 
 For this we also need to amend the helpful_scripts.py, so that we expand the definition of "development" networks.
 Since we have added the local blockchain no to the Development section of the networks, Brownie will actually save all interactions with contracts
@@ -93,6 +258,10 @@ One can adjust this to another network, so that the default case will be adjuste
 A forked blockchain takes an exact copy of an existing blockchain. The advantage here is that the forked blockchain already comes with all 
 the contracts deployed of the to be forked blockchain, including the Price feed contracts, transaction data and all protocol contracts.
 This is why it is perfectly suited to use a forked Mainnet for simulation.
+
+Mainnet forking is the first choice for testing unit tests when no oracles are required.
+
+If oracles are required, then development networks are the way to go since oracles can be mocked there.
 
 ### Creating Own custom forked network
 ## Forking from infura has some performance issues though
@@ -148,12 +317,17 @@ For price-feeds, there are available sponsors which are paying for these oracles
 
 Getting a random number follows the request and receive route.
 
-## Addind Contract to Brownie
-Contracts that are added into the contracts folder will all be compiled with brownie when brownie compile.
+## Adding Contract to Brownie
+Contracts that are added into the contracts folder will all be compiled with brownie when ```brownie compile```.
 This means that they are then accessible in the whole project context through 
 ```python
-from brownie import 
+from brownie import CompiledContract
 ```
+
+One can also add contracts through adding the associated interface of the contract into the interfaces folder.
+
+When one is only interested in interacting with specific functions on a given contract, it is sufficient to just include those descriptions into the respective 
+
 
 ## Testing
 One typically creates two folders in the tests folder -> `integration´ and *unit*
@@ -181,7 +355,13 @@ brownie bake chainlink-mix
 To create an ERC-20 token, one needs to create a contract with the functions and requirements as defined in [EIP-20](https://eips.ethereum.org/EIPS/eip-20).
 There are multiple templates available open source, which can be used as a base to create an ERC-20 token from scratch.
 Visit [OpenZeppelin Code Resources on ERC-20](https://docs.openzeppelin.com/contracts/4.x/erc20) for reference on building an ERC-20 contract.
+In this setup, one can declare the ownership of the contract and so on. Also the initial distribution schedule can be difined here.
+Additional functionalities, like a burn mechanism can also be added and some template can be found [here](https://github.com/OpenZeppelin/openzeppelin-contracts/tree/release-v4.8/contracts/token/ERC20).
 
+## DeFi
+### WETH (Gateway)
+WETH is an ERC-20 version of ETH. 
+WETH-Gateways are used to change the native ETH on Ethereum into WETH, which can then be used to interact with other ERC-20 tokens / contracts.
+Depositing ETH into the WETH contract will mint WETH token and transfers it the sender address.
 
-
-
+To get the ETH out, the withdraw function can be invoked which will burn the WETH tokens and return the ETH tokens to the sender address.
