@@ -16,3 +16,8 @@ While addresses of lending pools might change, the addresses of these two contra
 ## Testing
 For integration testing we are using **Goerlie**.
 For unit testing we ware using a **Mainnet-fork**.
+
+
+## Repaying Aave loans
+It is recommended to send an amount back that is higher than the inital amount borrowed, since interest has been accrued.
+To send back the exact amount of borrowed funds, one can send the amount = -1 in the LendingPool.repay function.

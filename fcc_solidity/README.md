@@ -11,8 +11,8 @@
 - [x]  Lesson 6 - Brownie Fund Me
 - [x]  Lesson 7 - Lottery - SmartContract-Mix
 - [x]  Lesson 8 - Chainlink Mix
-- [ ]  Lesson 9 - ERC20s, EIPs, and Token Standard
-- [ ]  Lesson 10 - Defi & Aave
+- [x]  Lesson 9 - ERC20s, EIPs, and Token Standard
+- [x]  Lesson 10 - Defi & Aave
 - [ ]  Lesson 11 - NFTs
 - [ ]  Lesson 12 - Upgrades
 - [ ]  Lesson 13 - Full Stack Defi
@@ -326,7 +326,9 @@ from brownie import CompiledContract
 
 One can also add contracts through adding the associated interface of the contract into the interfaces folder.
 
-When one is only interested in interacting with specific functions on a given contract, it is sufficient to just include those descriptions into the respective 
+When one is only interested in interacting with specific functions on a given contract, it is sufficient to just include those descriptions into the respective interface definition.
+
+Interfaces can typically be found within the app docs, github repos or directly on etherscan (on the given contract address).
 
 
 ## Testing
@@ -352,12 +354,19 @@ brownie bake chainlink-mix
 ```
 
 ## ERC-20 Tokens
+ERC20 tokens come with a very simple mapping of who holds the token and how much of it.
 To create an ERC-20 token, one needs to create a contract with the functions and requirements as defined in [EIP-20](https://eips.ethereum.org/EIPS/eip-20).
 There are multiple templates available open source, which can be used as a base to create an ERC-20 token from scratch.
 Visit [OpenZeppelin Code Resources on ERC-20](https://docs.openzeppelin.com/contracts/4.x/erc20) for reference on building an ERC-20 contract.
 In this setup, one can declare the ownership of the contract and so on. Also the initial distribution schedule can be difined here.
 Additional functionalities, like a burn mechanism can also be added and some template can be found [here](https://github.com/OpenZeppelin/openzeppelin-contracts/tree/release-v4.8/contracts/token/ERC20).
 
+ERC20 tokens have their own permission system. Every address that owns an ERC-20 token needs to specifically allow the use of the token by smart contract before interacting with a corresponding smart contract. This means that one has to approve that a contract account can withdraw these tokens.
+
+The ERC20 contract itself holds this function 
+```solidity
+function approve(address spender, uint256 value) external returns (bool success);
+```
 ## DeFi
 ### WETH (Gateway)
 WETH is an ERC-20 version of ETH. 
@@ -365,3 +374,35 @@ WETH-Gateways are used to change the native ETH on Ethereum into WETH, which can
 Depositing ETH into the WETH contract will mint WETH token and transfers it the sender address.
 
 To get the ETH out, the withdraw function can be invoked which will burn the WETH tokens and return the ETH tokens to the sender address.
+
+### Retrieving User Data from Aave
+Aave LendingPool also offers to retrieve the UserInfoData -> getUserAccountData.
+
+```python
+(total_collateral_eth, 
+    total_debt_eth, 
+    available_borrow_eth, 
+    current_liquidation_threshold, 
+    ltv, 
+    health_factor) = lending_pool.getUserAccountData(account.address)
+```
+
+Aave also offers [risk parameters](https://docs.aave.com/risk/v/master/asset-risk/risk-parameters) within its documenation.
+E.g. Ethereum currently has an LTV of `75%`, which means that you can only borrow at max `75%`of your collateral in ETH. 
+Whenever your LTV goes above this figure, the position will be liquidated.
+
+## NFTs - ERC-721 Tokens
+ERC721 contracts have unique tokenId's and each Id has a unique owner. They have a specific URI (essentially metadata to the token / NFT).
+The URI is a universal and unique indicator of what token / asset looks like and how the attributes look like.
+
+> A URI is a string containing characters that identify a physical or logical resource. URI follows syntax rules to ensure uniformity. Moreover, it also maintains extensibility via a hierarchical naming scheme. The full form of URI is Uniform Resource Identifier
+
+A typical token URI returns the name of the token, the description, the imageUri (separate URI for the image) and any attributes.
+In practice, this metadata is either stored on centralized solutions or within IPFS (which also has its own centralization aspect although being decentralized in the setup).
+
+Images (metadata) are typically attached to NFTs the following way:
+1. Get IPFS
+2. Add tokenURI json file to IPFS
+3. Add IPFS URI to NFT URI
+
+
