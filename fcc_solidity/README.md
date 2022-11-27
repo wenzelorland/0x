@@ -234,7 +234,8 @@ https://github.com/smartcontractkit/chainlink-mix
 ## Attaching a local Ganache instance to Brownie
 brownie networks list
 
-Let brownie remeber deployments to a ganache chain:
+Let brownie remember deployments to a ganache chain:
+E.g. one can take a chain spun-up from the Ganache UI client.
 ```bash
 brownie networks add Ethereum ganache-local host=http://127.0.0.1:7545 chainid=1337
 ```
@@ -354,7 +355,7 @@ brownie bake chainlink-mix
 ```
 
 ## ERC-20 Tokens
-ERC20 tokens come with a very simple mapping of who holds the token and how much of it.
+[ERC20](https://eips.ethereum.org/EIPS/eip-20) tokens come with a very simple mapping of who holds the token and how much of it.
 To create an ERC-20 token, one needs to create a contract with the functions and requirements as defined in [EIP-20](https://eips.ethereum.org/EIPS/eip-20).
 There are multiple templates available open source, which can be used as a base to create an ERC-20 token from scratch.
 Visit [OpenZeppelin Code Resources on ERC-20](https://docs.openzeppelin.com/contracts/4.x/erc20) for reference on building an ERC-20 contract.
@@ -392,9 +393,10 @@ E.g. Ethereum currently has an LTV of `75%`, which means that you can only borro
 Whenever your LTV goes above this figure, the position will be liquidated.
 
 ## NFTs - ERC-721 Tokens
-ERC721 contracts have unique tokenId's and each Id has a unique owner. They have a specific URI (essentially metadata to the token / NFT).
+[ERC721](https://eips.ethereum.org/EIPS/eip-721) contracts have unique tokenId's and each Id has a unique owner. They have a specific URI (essentially metadata to the token / NFT).
 The URI is a universal and unique indicator of what token / asset looks like and how the attributes look like.
 
+### NFT URI ((distinct) Uniform Resource Identifier for a given asset) and Metadata
 > A URI is a string containing characters that identify a physical or logical resource. URI follows syntax rules to ensure uniformity. Moreover, it also maintains extensibility via a hierarchical naming scheme. The full form of URI is Uniform Resource Identifier
 
 A typical token URI returns the name of the token, the description, the imageUri (separate URI for the image) and any attributes.
@@ -405,4 +407,38 @@ Images (metadata) are typically attached to NFTs the following way:
 2. Add tokenURI json file to IPFS
 3. Add IPFS URI to NFT URI
 
+The ERC721 is a factory contract. This means there is a main contract, wherin there is a list of all the NFTs and the owners of this type of NFT. 
+
+### Metadata Attributes
+Metadata attributes are which describe the functionality / utility of an NFT. For full functionality for your NFTs, one needs to put these attributes on-chain. The tokenURIs are then used just for the visuals.
+Otherwise, if one doesn't store the attributes on-chain, they aren't temper proof and can be changed depending on where they are stored, e.g. on if not stored on IPFS but on a central server which can be altered by the owner.
+
+### Viewing the NFT
+The ERC721 has an metadata section, but storing image data on-chain is very(**!!!**) expensive. This is why they are typically stored off-chain.
+The ERC721 token has a specific **metadata secion** where the tokenURI can be retrieved for outside reference for the NFT (type) contract. 
+
+### IPFS (Inte-Planetary File Storage)
+Anbody who is participating in IPFS can hook up images to their node that they are then replicating on their node. 
+Not every image is automatically replicated across the whole network. This is because of hard-disc space constraints and network congestion.
+If at least 1 node is hosting an image, then every node on the network has access to this image and host it itself.
+[IPFS-Setup](https://docs.ipfs.tech/install/command-line/) and [concepts](https://docs.ipfs.tech/concepts/) and [documentation](https://docs.ipfs.tech/reference/http/gateway/#api), and [IPFS-RPC-documenation](https://docs.ipfs.tech/reference/kubo/rpc/#origin-based-security).
+
+Everything within IPFS is hashed and has every data pieces stored there have an associated unique hash uniquely identifying the data.
+
+**Note**
+
+If you are the only one who is keeping this image of the data on your node, then whenever the nodes is not online, i.e. active, then no one can see the data that is being hosted on the node. E.g. when having uploaded an NFT image and your node is the only one hosting that image data, then whenever it is offline, the metadata will also be offline and not reachable for others.
+
+#### Backup Upload to Pinata --> Pinning Data to IPFS
+Because of this, it is best practice to also upload the metadata to some service which maintains its services around the clock so that at least whenever your node is down / not active, users / people still have access to the metadata of the image / NFT. 
+
+Pinata is an IPFS file management service and they will pin whatever data your node is running, ensuring that you are at least not the only one hosting these images. These services are typically not for free, thought they also come with some free tiering. 
+
+#### Starting Own IPFS Node
+```bash
+ipfs daemon
+```
+
+
+### NFT Scarcity and Randomness for Minting
 
