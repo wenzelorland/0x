@@ -6,6 +6,7 @@ endpoint = "pinning/pinFileToIPFS"
 filepath = "./img/pug.png"
 filename = filepath.split("/")[-1:][0]
 headers = {"pinata_api_key":os.getenv("PINATA_API_KEY"), "pinata_secret_api_key":os.getenv("PINATA_API_SECRECT")} 
+
 def main():
     with open(filepath, "rb") as fp:
         image_binary = fp.read()
