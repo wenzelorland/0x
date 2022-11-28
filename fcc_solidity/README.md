@@ -13,7 +13,8 @@
 - [x]  Lesson 8 - Chainlink Mix
 - [x]  Lesson 9 - ERC20s, EIPs, and Token Standard
 - [x]  Lesson 10 - Defi & Aave
-- [ ]  Lesson 11 - NFTs
+- [x]  Lesson 11 - NFTs
+  - [ ]  there is a bug when deploying to testnet, that is the transaction reverts because of gas estimation error within scripts/advanced_collectible/deploy_and_create.py -> line 18
 - [ ]  Lesson 12 - Upgrades
 - [ ]  Lesson 13 - Full Stack Defi
 
@@ -426,7 +427,6 @@ If at least 1 node is hosting an image, then every node on the network has acces
 Everything within IPFS is hashed and has every data pieces stored there have an associated unique hash uniquely identifying the data.
 
 **Note**
-
 If you are the only one who is keeping this image of the data on your node, then whenever the nodes is not online, i.e. active, then no one can see the data that is being hosted on the node. E.g. when having uploaded an NFT image and your node is the only one hosting that image data, then whenever it is offline, the metadata will also be offline and not reachable for others.
 
 #### Backup Upload to Pinata --> Pinning Data to IPFS
@@ -439,6 +439,65 @@ Pinata is an IPFS file management service and they will pin whatever data your n
 ipfs daemon
 ```
 
+## Smart Contracts Upgrades
+Smart contracts deployed on-chain in general are immutable. The state of the smart contract changes and may be changes but the implementation of the smart contract itself is immutable.
 
-### NFT Scarcity and Randomness for Minting
+There are ways to make smart contracts upgradeable.
+### Smart Contract Setups / Upgrade Methods
+1. Not really upgradeable but parametrizable
+2. Social Yeet / Migration
+3. Proxies
 
+#### Parametrization
+This refers to just updating existing parameters within the smart contract without touching the actual implementation of the smart contract itself.
+- Can't add new storage or state variables
+- Can't add new logic
+- Updating certain parameters
+
+This is not really upgrading but interacting with the implemented logic which maybe has some switches in place to steer the contract behaviour.
+It is really simple to implement but really not that flexible. 
+
+The questions arises who has the privilige to alter these parameteres.
+#### Social YEET / Migration
+This referes to deploying a new contract without any dependencies to the old contract while cheering the community to migrate to the new version of the contract.
+Pros:
+- Truest to blockchain values
+- Easiest to audit
+
+Cons:
+- Lot of work to convince users to move
+- Different addresses
+
+#### Proxies
+Proxies refer to a setup where the user is interacting with a proxy instead of interacting with the corresponding **implementation** smart contract itself.
+This means that the proxy takes care addressing / interacting with the corresponding smart contracts. 
+In case a new version of the smart contract which is interacted with is deployed, then the address change / and behavior change can be addressed with the proxy itself without the user ever noticing.
+
+It effectively means that the proxy takes the responsibility of taking care of all the low level code instructions through the low-level delegatecall method.
+
+> ***Delegatecall*** - There exists a special variant of a message call, named `delegatecall`which is identical to a message call apart from the fact that the code at the target address is executed in the context of the calling contract `msg.sender`and `msg.value` do not change their values.
+> The code of the target contract is executed in the context of the calling contract (proxy). 
+
+This effectively means that if Contract**A** executes a delegatecall to Contract**B** then the code from Contract**B** is executed within the context of Contract**A**.
+E.g. the delegecall calls a function to set a value to a certain figure. Then instead of setting this value within Contract**B**, the value is set for Contract**A**.
+
+The proxy is there to be able to route to the corresponding implementation smart contracts which are currently in use. In case of an upgrade to one of the implementation smart contracts, one just needs to amend the respective address within the Proxy contract for the new implementation contract address.
+
+For instance, one could create a function which takes care of setting the new implementation address.
+
+```solidity
+function upgrade (address newImplementation) external (
+    if (msg.sender != admin) fallback () ;
+    implementation = newImplementation;
+}
+```
+
+##### Terminology
+1. **The Implementation Contract**
+   Which has all our code of our protocol. When we upgrade, we launch a brand new implemenation contract.
+2. **The proxy contract**
+   Which points to which implementation is the "correct" one, and routes everyone's function calls to that contract
+3. **The User**
+   They make calls to the proxy
+4. **The Admin**
+   This is the user (or group of users/voters) who upgrade to new implementation contracts.
