@@ -493,11 +493,90 @@ function upgrade (address newImplementation) external (
 ```
 
 ##### Terminology
-1. **The Implementation Contract**
+1. **<span style="color:blue"> The Implementation Contract </span>**
+   
    Which has all our code of our protocol. When we upgrade, we launch a brand new implemenation contract.
-2. **The proxy contract**
+2. **<span style="color:blue"> The Proxy Contract </span>**
+
+   
    Which points to which implementation is the "correct" one, and routes everyone's function calls to that contract
-3. **The User**
+3. **<span style="color:blue"> The User </span>**
+   
    They make calls to the proxy
-4. **The Admin**
+4. **<span style="color:blue"> The Admin </span>**
+   
    This is the user (or group of users/voters) who upgrade to new implementation contracts.
+
+#### Issues with Using Proxies
+1. Storage Clashes
+   In a delegateCall, one uses the logic of ContractB inside ContractA. The issue is that the delegateCall will change values in ContractA in the same storage location not necessarily the same value names.
+
+   Contract A delegatesCall ContractB:
+
+   Contract A:
+
+   (value is overwritten in contractA)
+   ```solidity
+   function doDelegateCall() {
+      callContractB(setValue())
+   }
+   ```
+
+   Contract B (upgraded contract):
+   ```solidity
+   uint256 public differentValue;
+   uint256 public value;
+
+   function setDValue(uint256 _differentValue) {
+      differentValue = _differentValue;
+   }
+
+   fuction setValue(uint256 _value) {
+      value = _value;
+   }
+   ```
+
+   -> Calling the delegateCall will actually 
+
+   Functions point to storage spots in solidity, not to the value names.
+
+   ```solidity
+   uint256 value;
+   uint256 differentValue;
+
+   function setValue(uint256) {
+      value = 2;
+   }
+   ```
+
+   Here **value** is at storage location 0, and **differentValue** is at storage location 1 (0 indexed). **setValue** actually sets the value of whatever is at storage location 0. This means that we can only apend new storage variables in new implementation contracts and one cannot reorder / change old ones.
+2. Function Selector Clashes
+   
+   When a delegateCall is made, a function selector is used to find the corresponding functions. 
+   > Function Selector:
+   > A 4 ybte hash of a function name and function signature that define a function.
+
+   It is possible that a function in the implementation contract has the same function selector as an admin fuction in the proxy contract, which may lead to clashes. These functions can be totally different but they can still have the same function selector.
+
+### Proxy Implementation Patterns
+
+Implementation methods to address the issues of proxy contracts in general.
+
+#### 1) Transparent Proxy Pattern
+
+Admins can't call implementation contract functions and are only allowed to call admin functions which govern the upgrades. 
+
+Users can only call functions in the implementation contract but not admin functions.
+
+#### 2) Universal Upgradeable Proxies UUPs
+
+Here all the logic of upgrading is actually put into the implementation contract itself.
+AdminOnly Upgrade functions are in the implementation contracts instead of the proxy.
+
+This also saves gas in the execution, since the admin check within the proxy contract does not have to be performed anymore. 
+The issue arises when one deploys the implementation contract without any upgradeability aspect, which makes it impossible to use wihtin this pattern.
+
+#### 3) Diamond Pattern
+
+This allows for multiple implementation contracts. This allows to employ a split conde base which does not have to be maintained within one specific contract. Since it is composed of multiple parts, one does not have to change / upgrade the whole contract everytime when there is a need to fix a bug or implement a new feature. This can then just be performed on the respective implementation contract. 
+The disadvantages here are that potentially the entire code base gets convoluted and harder to maintain with the split introducing more overall complexity and potentially leading to on average higher gas requirements.
