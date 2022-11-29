@@ -15,7 +15,7 @@
 - [x]  Lesson 10 - Defi & Aave
 - [x]  Lesson 11 - NFTs
   - [ ]  there is a bug when deploying to testnet, that is the transaction reverts because of gas estimation error within scripts/advanced_collectible/deploy_and_create.py -> line 18
-- [ ]  Lesson 12 - Upgrades
+- [x]  Lesson 12 - Upgrades
 - [ ]  Lesson 13 - Full Stack Defi
 
 ## Smart Contracts
@@ -493,22 +493,24 @@ function upgrade (address newImplementation) external (
 ```
 
 ##### Terminology
+
 1. **<span style="color:blue"> The Implementation Contract </span>**
-   
+
    Which has all our code of our protocol. When we upgrade, we launch a brand new implemenation contract.
 2. **<span style="color:blue"> The Proxy Contract </span>**
 
-   
    Which points to which implementation is the "correct" one, and routes everyone's function calls to that contract
 3. **<span style="color:blue"> The User </span>**
-   
+
    They make calls to the proxy
 4. **<span style="color:blue"> The Admin </span>**
-   
+
    This is the user (or group of users/voters) who upgrade to new implementation contracts.
 
 #### Issues with Using Proxies
-1. Storage Clashes
+
+1. **Storage Clashes**
+
    In a delegateCall, one uses the logic of ContractB inside ContractA. The issue is that the delegateCall will change values in ContractA in the same storage location not necessarily the same value names.
 
    Contract A delegatesCall ContractB:
@@ -516,6 +518,7 @@ function upgrade (address newImplementation) external (
    Contract A:
 
    (value is overwritten in contractA)
+
    ```solidity
    function doDelegateCall() {
       callContractB(setValue())
@@ -523,6 +526,7 @@ function upgrade (address newImplementation) external (
    ```
 
    Contract B (upgraded contract):
+
    ```solidity
    uint256 public differentValue;
    uint256 public value;
@@ -536,8 +540,6 @@ function upgrade (address newImplementation) external (
    }
    ```
 
-   -> Calling the delegateCall will actually 
-
    Functions point to storage spots in solidity, not to the value names.
 
    ```solidity
@@ -550,17 +552,33 @@ function upgrade (address newImplementation) external (
    ```
 
    Here **value** is at storage location 0, and **differentValue** is at storage location 1 (0 indexed). **setValue** actually sets the value of whatever is at storage location 0. This means that we can only apend new storage variables in new implementation contracts and one cannot reorder / change old ones.
-2. Function Selector Clashes
-   
+
+2. **Function Selector Clashes**
+
    When a delegateCall is made, a function selector is used to find the corresponding functions. 
    > Function Selector:
    > A 4 ybte hash of a function name and function signature that define a function.
 
    It is possible that a function in the implementation contract has the same function selector as an admin fuction in the proxy contract, which may lead to clashes. These functions can be totally different but they can still have the same function selector.
 
+
+### Storage Appending
+
+Imagine we have proxy contract which references and delegates call to the implementation contract box.
+
+- Now the proxy delegateCalls a function to set `public value = 1`
+- Now we upgrade the proxy to reference boxV2, which has an increment function that increments the `value`by $+1$, with `value` being initialized as $0$. The proxy delegateCalls the increment function
+- When one reads the value of `value` on the proxy contract, it will show **$2$**. The reason for this is because we are working on the storage of the proxy contract, where `value` is being incremented in the storage location of the proxy contract
+- So instead of returning the `value` $1$ (which would be the case when we purely worked on boxV2 instead of delegating through proxy), it returns the `value` $2$.
+
 ### Proxy Implementation Patterns
 
 Implementation methods to address the issues of proxy contracts in general.
+There are also multiple EIPs which try to unite a common standard when handling with proxies. E.g. see [EIP-1967: Proxy Storage Slots](https://eips.ethereum.org/EIPS/eip-1967).
+
+It is also common practive to set up a designated proxy admin. This can be done through e.g. a multi-sig account.
+
+Typically, when working with proxies, implementation contracts do not have a constructor. To imitate the constructor, one typically has an "initializer" function which is called instead.
 
 #### 1) Transparent Proxy Pattern
 
@@ -575,6 +593,8 @@ AdminOnly Upgrade functions are in the implementation contracts instead of the p
 
 This also saves gas in the execution, since the admin check within the proxy contract does not have to be performed anymore. 
 The issue arises when one deploys the implementation contract without any upgradeability aspect, which makes it impossible to use wihtin this pattern.
+
+In this setup, the references within the upgradeable proxy are upgraded once the new version of the implementation contract has been deployed to correctly reference the new version -> see Lesson_12.
 
 #### 3) Diamond Pattern
 
