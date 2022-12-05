@@ -58,6 +58,5 @@ def copy_folders_to_front_end(src, dest):
         shutil.rmtree(dest)
     shutil.copytre(src, dest)
 
-
 def main():
     deploy_token_farm_and_dapp_token(front_end_update=False)

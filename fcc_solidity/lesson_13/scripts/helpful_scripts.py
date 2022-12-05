@@ -12,7 +12,6 @@ from brownie import (
 )
 import time
 
-INITIAL_PRICE_FEED_VALUE = 2000e18
 NON_FORKED_LOCAL_BLOCKCHAIN_ENVIRONMENTS = ["hardhat", "development", "ganache"]
 LOCAL_BLOCKCHAIN_ENVIRONMENTS = NON_FORKED_LOCAL_BLOCKCHAIN_ENVIRONMENTS + [
     "mainnet-fork",

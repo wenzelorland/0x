@@ -16,7 +16,7 @@
 - [x]  Lesson 11 - NFTs
   - [ ]  there is a bug when deploying to testnet, that is the transaction reverts because of gas estimation error within scripts/advanced_collectible/deploy_and_create.py -> line 18
 - [x]  Lesson 12 - Upgrades
-- [ ]  Lesson 13 - Full Stack Defi
+- [x]  Lesson 13 - Full Stack Defi
 
 ## Smart Contracts
 Smart contracts are a self executed set of instructions which is executed without the need of a 3rd party.
@@ -600,3 +600,17 @@ In this setup, the references within the upgradeable proxy are upgraded once the
 
 This allows for multiple implementation contracts. This allows to employ a split conde base which does not have to be maintained within one specific contract. Since it is composed of multiple parts, one does not have to change / upgrade the whole contract everytime when there is a need to fix a bug or implement a new feature. This can then just be performed on the respective implementation contract. 
 The disadvantages here are that potentially the entire code base gets convoluted and harder to maintain with the split introducing more overall complexity and potentially leading to on average higher gas requirements.
+
+### General Notes on Staking
+
+Typically, instead of sending the reward tokens to the user, it is much more gas efficient to just let the user claim the reward.
+For sending the tokens, the contract sending the tokens need to loop across all stakers to verify the amount which it needs to send them.
+
+This way, one needs to loop through every possible staker, every time a reward is send out. So instead of the staking contract sending the rewards, the user who staked their tokens just need to claim their rewards themselves. This way, the staking contract just verifies this very user's address (if it is a staker) and then the user can claim (transferFrom) the rewards tokens. 
+
+## Front-End Web3 Development
+
+- [`create-react-app`](https://create-react-app.dev)
+- [useDApp](https://usedapp.io) has many ready built components for Web3 functionality
+- [FCC-Repo FullStackDefi](https://github.com/PatrickAlphaC/defi-stake-yield-brownie-freecode)
+- [material-ui](https://v4.mui.com)
