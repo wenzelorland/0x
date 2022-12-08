@@ -1,0 +1,27 @@
+dotenv: .env
+
+dependencies:
+  - OpenZeppelin/openzeppelin-contracts@3.4.0
+  - smartcontractkit/chainlink-brownie-contracts@1.1.1
+compiler:
+  solc:
+    remappings:
+      - '@openzeppelin=OpenZeppelin/openzeppelin-contracts@3.4.0'
+      - '@chainlink=smartcontractkit/chainlink-brownie-contracts@1.1.1'
+networks:
+  development:
+    keyhash: "0x2ed0feb3e7fd2022120aa84fab1945545a9f2ffc9076fd6156fa96eaff4c1311"
+    fee: 100000000000000000
+  goerli:
+    vrf_coordinator: '0x2Ca8E0C643bDe4C2E08ab1fA0da3401AdAD7734D'
+    eth_usd_price_feed: '0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e'
+    link_token: '0x326C977E6efc84E512bB9C30f76E30c160eD06FB'
+    keyhash: '0x79d3d8832d904592c0bf9818b621522c988bb8b0c05cdc3b15aea1b6e8db0c15'
+    fee: 250000000000000000 # 0.1 Link in Wei -> https://docs.chain.link/vrf/v2/subscription/supported-networks#goerli-testnet --> premium
+    verify: True
+  ganache-local: 
+    keyhash: '0x79d3d8832d904592c0bf9818b621522c988bb8b0c05cdc3b15aea1b6e8db0c15'
+    fee: 250000000000000000 # 0.1 Link in Wei -> https://docs.chain.link/vrf/v2/subscription/supported-networks#goerli-testnet --> premium
+ 
+wallets:
+  from_key: ${PRIVATE_KEY}
